@@ -1,0 +1,9 @@
+.deps
+.libs
+
+# binaries
+fuppes
+fuppesd
+
+# stamp
+stamp-h1

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+DATA_DIR="@DATA_DIR@"
+PLUGIN_DIR="@PLUGIN_DIR@"
+
+libtool --mode=execute valgrind \
+--tool=memcheck --leak-check=full --show-reachable=yes \
+--leak-resolution=high --num-callers=40 \
+--track-origins=yes \
+$1 -a `pwd` -d $DATA_DIR -l $PLUGIN_DIR $@
+

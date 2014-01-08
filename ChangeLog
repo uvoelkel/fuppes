@@ -1,0 +1,393 @@
+Version
+
+  * rewrote http server using libev or libevent
+  * got rid of the singleton mess
+  * decoupled some components and started to write individual tests
+
+
+
+Version SVN-neverreleased
+
+  * fixed http range request handling (fixes playback on Linn Players)
+  * fixed http chunked request/response handling (fixes browsing on Moxi DVR)
+  * fixed icon list in device description
+  * changed xml-node order in device description (fixes device name in songbook)
+  * added xspf playlist creation
+  * playlist style configurable
+  * updated inotify-cxx from 0.7.2 to 0.7.3
+  * new database layout
+  * rewrote FAM (file alteration monitoring) handling on linux (using inotify)
+  * rewrote virtual folder handling
+  * new config file structure
+  * ip or mac based device mapping
+  * libmpcdec 2.x support
+  * ffmpegthumbnailer 2.x support
+  * mysql support
+  * URL rewrite (/AudioItems/0123456789/title.mp3 instead of /AudioItems/0123456789.mp3)
+  * support for video metadata
+  * dlna fixes
+  * removed ffmpeg transcoder. use the external process transcoder instead
+
+
+Version SVN-660 2010-01-11
+
+  * fixed subscription parsing for coherence UPnP framework
+  * initial support for wpl playlists (Robert Massaioli)
+  * initial ffmpegthumbnailer plugin
+  * initial windows service
+  * WMP 11 support
+  * cleanup and bugfixes
+  * added album & genre search/sort capabilities
+
+
+Version SVN-640 2009-07-19
+
+  * exiv2 plugin from Ben Rees
+  * intitial support for fam (Linux only using inotify)
+	* moved database connection into plugins (sqlite3 and mysql)
+	* initial album art support
+  * image scaling via GET parameter (?width=x&height=y)
+    (requires imagemagick transcoder plugin)
+
+  * moved metadata extraction into plugins
+	* fixed DLNA string for audio and image files
+	* mp4/m4a metadata extraction
+	* initial RSS support #1847121
+	* initial mp3 decoder (madlib)
+	* "external command" transcoder #1851499
+	* support for simage
+  * initial sort support
+	* optionally use same UUID on each startup #1890011
+	* updated default config
+  * fixed file extension for converted image files
+	* fixed bug #1837741 - Ogg files don't stream
+	* fixed bug #1862357 - iTunes path not parsed correctly Mac OS X 10.5
+	* fixed bug #1819645 - fuppesd is failing to background fuppes
+  * fixed bug #1863196 - unsafe use of std::string
+  * fixed bug #1870194 - OS X iTunes xml file paths
+	* fixed bug #1864791 - multicast problem on OS X
+	* fixed bug #1880069 - search string parser error
+  * big ffmpeg-patch from Constantine Filin (only in win32 build)
+  * patch #2212188 - Typo fix in VirtualContainerMgr.cpp (unknown author)
+  * added crosscompilation script for windows
+  * new thread and socket class
+  * fixed possible infinite loop in http client
+  * started to debianize the package
+
+  * fixed bug #2486585 - SoundBridge M1001 support
+  * fixed bug #2533619
+  * fixed bug #2193624: patch by stvoigt
+  * fixed bug #2034177
+  * fixed bug #1914669
+  * feature request #1899234
+  * fixed uuid #1890011
+  * #1877933 - optionally show "0x0" on empty resolution
+
+
+Version SVN-578 2007-12-19
+
+	NOTE: please remove your fuppes.db
+
+	* fixed ffmpeg compilation for 
+    older ffmpeg versions (patch from Klaus S. Madsen)
+    and with missing libswscale
+	* fixed FAAD decoder for Ubuntu (patch from Klaus S. Madsen)
+  * fixed stupid buffer overflow in 
+	  FFmepgWrapper (patch from Jared D. McNeill)
+	* MediaServer description values configurable
+	* libnotify support without gnome-panel-applet (#1814615)
+	* fixed #1822462 (ImageMagick includes)
+	* fixed #1815588 (segfault when en-/decoder fails to load)
+	* added optional refId support for virtual folders
+	* support for Yamaha RX-N600
+	* #1838835 temp dir configurable
+  * pass additional ffmpeg arguments (add <ffmpeg_params> node)
+
+Version SVN-549 2007-10-04
+  * fixed UPnPBrowse for virtual devices
+	* speedup database creation (items and vfolders)
+	* fixed virtual folder creation
+  * fixed size calculation in WAV and PCM encoder
+	* large file support
+	* database update: add new files
+	* minor bugfixes and enhancements
+
+Version SVN-530 2007-09-20
+  * fixed WAV and PCM encoder
+  * speedup transcoding
+    removed lot's of memory re-/allocations  
+  * fixed sleep-bug thanks to Tim Rightnour
+  * fixed playlist creation bug thanks again to Tim Rightnour
+  * fixed malformed default configuration
+  * fixed virtual folder creation
+
+Version SVN-524 2007-09-14
+  * AAC/MP4 decoder
+  * fixed Deadlock on FreeBSD
+  * lame quality configurable
+  * id3v1 tag in transcoded files
+  * new file settings flag "extract_metadata"
+  * fixed segfault in LAME wrapper if id3_tag functions are missing
+  * ImageMagick support on windows
+  * video transcoding configurable
+
+Version SVN-507 2007-08-29
+  * PS3 transcoding
+  * include metadata in lame encoded files (id3v2 tag)
+  * initial WAV-encoder
+  * initial PCM-encoder
+  * fixed deadlock on malformed SSDP-messages
+    (Thanks to Justin Maggard)
+  * "tremor" (integer only vorbis decoder) support
+  * initial video transcoding (feature request #1617435)
+  * image rescaling (feature request #1656859)
+  * vfolder creation speedup
+    (patch by Justin Maggard)
+  * shared file types completely configurable
+
+Version 0.7.2a-20070529
+  * initial support for virtual containers
+  * initial UPnP Search support
+  * initial support for device specific settings
+  * initial ImageMagick support (read image properties)
+  * initial ffmpeg support (read video properties)
+  * initial XBox 360 support
+    (Big thanks to Justin Maggard <jmaggard at users.sourceforge.net>)
+  * initial PS3 support
+  * initial iTunes.xml support
+  * win32 gui (more or less ;))
+  
+  * split up fuppes (command line) and fuppesd (daemon)
+  * support for FLAC >= 1.1.3 (api changed)
+  * libiconv optional
+  * fixed ip address detection
+  * fixed crash if fuppes config is malformed
+  * fixed urlencoded form value handling
+  * fixed compilation error
+	  (implemented detection of second iconv param)
+  * HTTP client requests will no longer block the main thread
+  * fixed bug #1671132
+  * fixed bug #1669624
+	  (thanks to Jochen <jochen2 at users.sourceforge.net> and 
+    Justin Maggard <jmaggard at users.sourceforge.net>)
+  * fixed extraction of folder name from shared directory
+    when containing a trailing slash or backslash
+  * fixed crash on timed out subscriptions (win32)
+
+  * win32 
+    * sqlite from 3.3.7 to 3.3.17
+    * libxml2 from 2.6.19 to 2.6.28    
+
+Version 0.7.1 (2007-02-03)
+  * fixed bug #1650930 (win32)
+  * Mac OS X fixes
+  ** correct handling of socket option SO_NOSIGPIPE
+  ** fixed send() error handling
+
+Version 0.7 (2007-02-01)
+  * initial UPnP eventing
+    referring to the "Intel DeviceValidator" the eventing mechanism
+    is now UPnP 1.0 compliant
+  * initial taglib support (optional)  
+  * initial TwoLAME support (choose encoder at build or runtime)
+  * initial libnotify support (./configure --enable-libnotify)
+  
+  * new ./configure option --enable-default-http-port=PORT  
+
+  * fixed FLAC transcoding on 64 bit machines
+    (patch from Qball Cow. Big thanks!)
+  * fixed crash on 64 bit machines caused by an
+    unhandled out of range exception (Thanks again Qball)
+  
+  * syslog support (unix)
+  ** daemon mode will allways use syslog
+  ** use the parameter --syslog for the command line mode
+  
+  * fixed daemon mode (unix)
+  ** config file is now checked before forking
+
+  * code cleanup
+  * new, easy to extend file extension to mime type mapping
+    take a look at "src/ContentDirectory/FileDetails.cpp"    
+  
+  * fixed TTL (time to live) for SSDP alive messages
+  * (win32 build) now correctly linked against libws2_32 instead of libwinsock2
+
+  * webinterface: handling of urlencoded form values
+
+  * fixed non blocking readline (mac os x)
+  * fixed pthread_cancel (mac os x)
+
+Version 0.5.4 (2006-11-23)
+  * initial support for playlists (m3u, pls)
+    new configuration option: "playlist representation"
+  ** "file": playlists are send as playlist files
+  ** "container": playlists are shown as playlist containers
+  
+  * fixed transcoding
+  ** transcoding thread was started on HTTP HEAD request
+  ** implemented transcoding cache
+     parallel request of the same file will
+     not start several transcoding threads
+  ** speed up memory reallocation
+
+  * code cleanup
+  ** moved transcoding functions from
+     CHTTPMessage object to CTranscodingCache
+  ** begun moving http message parsing from 
+     CHTTPMessage object to CHTTPParser
+
+  * uses libuuid for real UUIDs under linux/unix if available
+  * fixed some minor memory leaks
+  * fixed HexToInt conversion for large numbers
+  * fixed HTTP 206 Response - no header was sent if offset was larger than the file
+
+  * fixed UTF-8 conversion
+  ** new config option: "local_charset"
+
+  * fixed bug #1504778
+  ** by mistake fuppes expected a blank in the SSDP-Messages where none is needed
+  ** it now correctly shows up on Win XP
+  * win32: updated pcre.dll 5.0 to pcre3.dll 6.4
+
+Version 0.5.3 (2006-10-03)  
+  * added initial vob support
+  * added wmv support
+  * added initial vdr file support (for Telegent TG 100)
+  * added FLAC transcoding
+  * fixed UTF-8 conversion of file and directory names
+  
+  * webinterface
+  ** Status page shows the number of shared objects
+  ** completely configurable via webinterface
+  
+  * HTTP-Server
+  ** reduced thread mutex locking.
+     HTTP-request are handled much faster
+  ** fixed a huge memory leak.
+     HTTP-Response objects where not freed :(
+  
+  * config file will be re read before
+    rebuilding the database. there is no need
+    to restart fuppes after adding or removing
+    shared directories.
+
+Version 0.5.2 (2006-09-10)
+  * HTTP-server cleanup
+  * fixed AVI-playback bug for Telegent TG100  
+  * added bmp, png and gif support
+  * (win32) updated SQLite to 3.3.7
+
+  * LameWrapper
+  ** fixed seg fault on missing libmp3lame.so concerning fuppes
+     compiled with lame support
+  ** searches for libmp3lame.so and libmp3lame.so.0
+
+  * new configuration options
+  ** set allowed ip addresses (optional)
+  ** set maximum file name length (optional)
+
+Version 0.5.1 (2006-03-18)
+  * fixed bug #1449045
+
+Version 0.5 (2006-03-11)
+  * HTTP-Server
+  ** fixed some minor bugs
+  ** implemented byte-range request handling
+  ** Header Field "Date" now shows the real current GMT
+  ** (win32) handling of socket error WSAEWOULDBLOCK
+
+  * SSDP-Controller
+  ** implemented correct handling of the MX-value
+  ** improved SSDP-message parsing
+  ** referring to the "Intel DeviceValidator" the discovery mechanism
+     (Advertising, Searching, etc...) is now UPnP 1.0 compliant
+
+  * ContentDirectory:
+  ** database access thread safe
+  ** avi-file handling
+  ** fixed and improved handling of UPnP-Action Browse
+  *** BrowseFlag Metadata support
+  *** Filter support
+  ** UPnPGetSearchCapabilities()
+  ** UPnPGetSortCapabilities()
+  ** UPnPGetSystemUpdateID()
+  ** referring to the "Intel DeviceValidator" the ContentDirectory 
+     now implements the minimal required functionality for the UPnP 1.0
+     standard. Fuppes passes the ContentDirectory test scenario.
+
+  * removed comments from ContentDirectoryDescription.xml. with the comments
+    Nero ShowTime crashed.
+  * fixed a minor memory leak in the SSDP and HTTP session handling
+  * (win32) update SQLite to 3.3.4
+
+Version 0.3.3 (2006-01-15)
+  * added "rebuild database" option
+  * fixed console input bug (unix)
+  * fixed directory listing description
+  * added ConnectionManager and ContentDirectory description.
+    fuppes now shows up on "cidero MediaController" and the "Intel MediaController"
+  * fixed SQL escape bug.
+    leading ' in file names were not escaped correctly
+  * fixed wrong content length for the webinterface images
+  * fixed mime-type for video and image files
+
+Version 0.3.2 (2005-12-26)
+  * fixed transcoding-delay bug
+  * added sqlite3 support
+    contentlist is stored in a database so it does not need to be rebuild
+    on each startup.
+  * implemented signal handling (unix)
+    shutdown on SIGINT (ctrl-c) or SIGTERM (e.g. start-stop-daemon --stop -nfuppes)
+
+Version 0.3.1 (2005-11-19)
+  * fixed bug #1352301
+  * fixed first level directory listing
+  * fixed device-description bug
+  * fixed segfault on slow machines. a package of 0 bytes was send when
+    transcoding did not returned a result within a second.
+  * mp3 files aren't loaded completely into memory any longer
+  * begun image and video support (unstable)
+
+Version 0.3 (2005-11-01)
+  * implemented on the fly transcoding from ogg-vorbis and mpc (musepack) to mp3
+  * daemon mode (start with -d) (will not shutdown correctly on kill signal)
+
+Version 0.1.5 (2005-10-02)
+  * fixed device time-out bug
+  * fixed HTTP-session handling
+  * fixed socket reuse bug (win32 only)
+  * implemented HTTP 1.1 HEAD-request handling
+  * IP-address and HTTP-port configurable
+
+Version 0.1.4 (2005-09-21)
+  * fixed timer bug
+  * fixed memory-leaks
+  * improved thread handling
+  * (win32) updated pcre-lib from 5.0.1779.29128 to 6.3.2058.19251
+  * enhanced webinterface
+
+Version 0.1.3 (2005-09-03)
+  * alive message is repeatedly send every 3 mins
+  * remote device timeout
+  * enhanced logging
+  * enhanced webinterface
+  * some bugfixes
+
+Version 0.1.2 (2005-08-09)
+  * code cleanup and documentation
+  * enhanced logging
+  * improved threading
+  * enhanced webinterface
+  * many bugfixes
+
+Version 0.1.1 (2005-07-10)
+  * sorted contentlists
+  * tries to read config from ~/.fuppes/ (Linux/Unix) 
+    resp. %APPDATA%\Free UPnP Entertainment Service\ (MS Windows)
+  * writes default config if none found
+  * started webinterface
+  * some bugfixes and code-cleanup
+
+Version 0.1 (2005-06-25)
+  * first release.

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fuppes_config version="0.9">
+
+    <shared_objects>
+    	<!--
+        <object type="dir">/mnt/music</object>
+        <object type="itunes" rewrite-path="C:\Music|/c/music">/mnt/music/itunes.xml</object>
+        -->
+    </shared_objects>
+
+    <network>
+        <!-- ip address on windows. ip address or nic name (e.g. eth0) on linux. empty = automatic detection -->
+        <interface />
+        <!--empty or 0 = random port-->
+        <http_port />
+        <!--list of ip addresses allowed to access fuppes. if empty all ips are allowed-->
+        <allowed_ips>
+            <!--These are examples of what data you can put between the ip tags where (* => anything, [x-y] => range)-->
+            <!--<ip>192.168.0.1</ip>-->
+            <!--<ip>192.168.0.[20-100]</ip>-->
+            <!--<ip>192.168.0.*</ip>-->
+            <!--<ip>192.*.[0-2].[40-*]</ip>-->
+        </allowed_ips>
+    </network>
+
+    <database>
+        <!-- sqlite3 | mysql | postgres -->
+        <type>sqlite3</type>
+
+        <!-- sqlite3 -->
+        <file />  <!-- if empty default path will be used -->
+
+        <!-- mysql | postgres -->
+        <hostname />
+        <username />
+        <password />
+        <dbname />
+
+        <!-- common -->
+        <readonly>false</readonly>
+    </database>
+
+    <global_settings>
+        <!--a list of possible charsets can be found at:
+          http://www.gnu.org/software/libiconv/
+          for (at least german) windows it is CP1251
+        -->
+        <local_charset>UTF-8</local_charset>
+        
+        <temp_dir/>
+        
+        <!-- if enabled = false a new uuid is created on each start-->
+        <fixed_uuid enabled="false" />
+    </global_settings>
+
+
+    <!--
+    enable virtual folder layouts 
+    all vfolder layouts enabled here will be created and updated.
+    if "default" is enabled all renderers (unless something else is set in the next part)
+    will use that layout.
+    -->
+    <vfolders enabled="false">
+	    <vfolder name="default" enabled="true" />
+	    <vfolder name="xbox" enabled="false" />
+    </vfolders>
+
+
+    <!--
+    the default attribute sets the default configuration used by all clients
+    if no specific mapping is defined.
+
+    NOTE: all devices inherit the settings from base.cfg and extend or overwrite them
+
+    map device settings and virtual folder layouts to a device
+    if no vfolder is set "default" will be used (if enabled above).
+    if vfolder is set to "none" no virtual layout will be used (even though it is enabled above) 
+    -->
+    <devices default="default">
+        <!--ip value="123.123.123.123" device="default" vfolder="none" /-->
+        <!--ip value="123.123.123.123" device="xbox" vfolder="xbox" /-->
+        <!--mac value="00:12:5a:f0:59:3f" device="xbox" vfolder="xbox"/-->
+    </devices>
+
+</fuppes_config>

@@ -1,0 +1,101 @@
+0.7.4    2012-04-05
+ * new includes to build with GCC 4.4 and newer
+
+0.7.3    2009-12-09
+ * cleanup of includes
+
+0.7.2    2007-04-18
+ * added #include <stdint.h> (required for Debian Sarge, #0000155)
+
+0.7.1    2007-01-20
+ * incorrect event name handling fixed (#0000135)
+
+0.7.0    2007-01-13
+ * added Inotify::SetCloseOnExec() for simple setting this feature
+
+
+0.6.3    2007-01-06
+ * incorrect behavior for IN_IGNORED fixed (#0000124)
+
+
+0.6.2    2007-01-03
+ * bad IN_MOVE_SELF dumping in IN_ALL_EVENTS fixed (#0000118)
+
+
+0.6.1    2006-12-30
+ * fixed incorrect behavior for IN_ONESHOT (#0000113)
+
+
+0.6.0    2006-12-28
+ * added methods for getting/setting inotify capabilities and limits
+ * added IN_SELF_MOVED flag (if defined)
+ * added Inotify::IsRecursive() for identifying recursive watches
+   (will be implemented in future versions)
+
+0.5.3    2006-12-06
+ * fixed incorrect error handling in WaitForEvents()
+
+
+0.5.2    2006-11-12
+ * problem with ignoring IN_OPEN has been fixed (#0000102)
+
+
+0.5.1    2006-11-10
+ * problems with includes have been fixed (#0000099)
+
+
+0.5.0    2006-10-29
+ * partial thread safety has been implemented (using rwlocks)
+ * Inotify::GetEnabledCount() method has been added
+
+
+0.4.1    2006-10-14
+ * wrong value returned by Inotify::GetWatchCount() has been fixed
+   (#0000092)
+   
+
+0.4.0    2006-10-13
+ * two additional flags (IN_ONLYDIR and IN_DONT_FOLLOW) may be used
+   if available (#0000086)
+ * "errorneous" multiple watches on the same path are no longer
+   possible (#0000087)
+ * tarball structure has been fixed (#0000088)
+ * inotify-syscalls.h is included only if inotify.h doesn't contain
+   syscall definitions (#0000090)
+ * enabling/disabling is now done through watch presence in the kernel
+   instead of dropping events (#0000091)
+ * InotifyWatch::SetMask() method has been added to allow later mask
+   modification
+
+
+0.3.1    2006-10-03
+ * fixed: wrong behavior for EWOULDBLOCK (Inotify::WaitForEvents())
+
+
+0.3.0    2006-10-03
+ * all errors now handled using exceptions (InotifyException)
+ * InotifyEvent no longer use struct inotity_event as its
+   internal data structure
+ * removed InotifyEvent::GetData() - internal data changed
+ * removed Inotify::IsReady() - no longer necessary
+ * added Inotify::GetDescriptor() - returns inotify file descriptor
+ * added Inotify::SetNonBlock() - switches nonblocking mode on/off
+ * added possibility to enable/disable watches
+ * some code cleanups
+
+
+0.2.0    2006-09-15
+ * InotifyEvent now contains a pointer to the source InotifyWatch
+ * fixed: InotifyEvent::IsType() - it now handles the mask correctly
+ * added a static method (InotifyEvent::GetMaskByName()) for finding a mask
+   for a name
+ * added a static version of InotifyEvent::DumpTypes() method
+ * added a static version of InotifyEvent::IsType() method
+ * dumped types (InotifyEvent::DumpTypes()) now separated by commas
+   instead of spaces
+ * InotifyEvent::DumpTypes() methods now use as general types as possible
+ * InotifyWatch now contains a pointer to the related Inotify
+
+
+0.1.0    2006-09-04
+first alpha version

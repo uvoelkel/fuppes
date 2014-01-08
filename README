@@ -1,0 +1,33 @@
+== Introduction ==
+
+Welcome to, and thankyou for downloading, FUPPES (Free UPnP Entertainment Service)!
+
+FUPPES is a free, multiplatform UPnP A/V Media Server. FUPPES supports a wide 
+range of UPnP MediaRenderers as well as on-the-fly transcoding of various audio, 
+video and image formats. FUPPES also includes basic DLNA support.
+
+
+== Basic Installation ==
+
+FUPPES uses standard GNU automake and as such all it requires to install is a:
+
+  autoreconf -vfi                                       # step 1
+  ./configure --prefix=/usr --localstatedir=/var/lib    # step 2
+  make                                                  # step 3
+  make install                                          # step 4
+
+It should be noted that before step 2 you may like to try './configure --help' to see
+what your options are and then run './configure' with the options that you want.
+And on Debian based systems you will likely need to prefix the 'sudo' command 
+to the 'make install' so that it will run with the right privileges.
+
+
+== Security Notice ==
+
+The only times that fuppes will require 'root' priveliges are:
+
+  1) When you are dealing with the init.d script.
+  2) When you are installing a packaged version of fuppes.
+  3) When you are running make install.
+
+For security reasons fuppes should not be run as root at any other time.

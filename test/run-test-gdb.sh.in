@@ -1,0 +1,7 @@
+#!/bin/sh
+
+DATA_DIR="@DATA_DIR@"
+PLUGIN_DIR="@PLUGIN_DIR@"
+
+libtool --mode=execute gdb --args $1 -a `pwd` -d $DATA_DIR -l $PLUGIN_DIR $@
+

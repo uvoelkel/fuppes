@@ -1,0 +1,70 @@
+
+inotify C++ interface
+
+(c) Lukas Jelinek, 2006, 2007, 2009, 2012
+
+1. About
+2. Requirements
+3. How to use
+4. Bugs, suggestions
+5. Licensing
+6. Documentation
+
+
+========================================================================
+
+
+1. About
+This program is the inotify C++ interface. It is designed for easy use
+of Linux inotify technology in C++ applications. You need not to deal
+with file descriptors and such uncomfortable things. Instead you can
+use a few simple C++ classes.
+
+
+2. Requirements
+* Linux kernel 2.6.13 or later (with inotify compiled in)
+* inotify header(s) installed in <INCLUDE_DIR>/sys. The most common
+  place is /usr/include/sys. Some Linux distributions contain only
+  inotify.h which defines everything needed. But sometimes must
+  be used inotify.h and inotify-syscalls.h as available e.g. at
+  the inotify-cxx homepage.
+* GCC 4.x compiler (probably works also with GCC 3.4, possibly with
+  older versions too)
+
+  
+3. How to use
+Include inotify-cxx.h into your sources and add inotify-cxx.cpp for
+compiling (e.g. through your makefile).
+
+If you have installed it into your system-wide include dir (e.g.
+/usr/include), use #include <inotify-cxx.h> or similar.
+Otherwise use #include "inotify-cxx.h".
+
+For thread-safe behavior, define the INOTIFY_THREAD_SAFE symbol
+(eg. -DINOTIFY_THREAD_SAFE on gcc's command line). See documentation
+for details about thread safety.
+
+
+4. Bugs, suggestions
+THIS PROGRAM IS AN ALPHA VERSION. IT PROBABLY CONTAINS BUGS AND
+THEREFORE IT IS NOT INTENDED FOR PRODUCTION USE.
+
+If you find a bug or have a suggestion how to improve the program,
+please use the bug tracking system at http://bts.aiken.cz.
+
+
+5. Licensing
+This program is free software; you can redistribute it and/or
+modify it under the terms of one of the following licenses:
+
+1. X11 license (see LICENSE-X11)
+2. GNU Lesser General Public License, version 2.1 (see LICENSE-LGPL)
+3. GNU General Public License, version 2  (see LICENSE-GPL)
+
+If you want to help with choosing the best license for you,
+please visit http://www.gnu.org/licenses/license-list.html.
+
+
+6. Documentation
+The API reference documentation is present in the HTML and man format.
+It was generated using the doxygen program.

@@ -1,0 +1,9 @@
+This file records user recognisable changes.
+
+v660 (2010-01-12)
+
+  * initial support for Windows Media Player Playlists (Robert Massaioli)
+  * WMP 11 support
+  * initial support for video thumbnails
+  * initial windows service
+  * added album & genre search/sort capabilities

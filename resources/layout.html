@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>{{ TITLE }}</title>
+
+<link href="/presentation/style.css" rel="stylesheet" type="text/css" media="screen" />
+<link href="/presentation/grid.css" rel="stylesheet" type="text/css" media="screen" />
+
+<script type="text/javascript" src="/presentation/mootools-core-1.4.5-full-nocompat.js"></script>
+<script type="text/javascript" src="/presentation/mootools-more-1.4.0.1.js"></script>
+
+<script type="text/javascript" src="/presentation/fuppes.js"></script>
+<script type="text/javascript" src="/presentation/fuppes-control.js"></script>
+<script type="text/javascript" src="/presentation/fuppes-database.js"></script>
+
+<!--
+<script type="text/javascript" src="/presentation/jquery-1.10.2.min.js"></script>
+
+<script type="text/javascript" src="/presentation/fuppes.jquery.js"></script>
+<script type="text/javascript" src="/presentation/fuppes-database.jquery.js"></script>
+-->
+
+{{ JS }}
+
+</head>
+    
+<body>
+
+<div id="js-check"></div>
+
+<header id="header">
+
+    <div id="logo"></div>
+
+    {{ APPVERSION }}
+    {{ APPNAME }}
+    {{ APPFULLNAME }}
+
+    <div class="database-status"></div>
+</header>
+
+<div id="wrapper">
+
+	<aside id="mainnav">
+	<nav>
+	{{ NAVIGATION }}
+	</nav>
+	</aside>
+		
+	
+	<section id="content" class="container_12">
+	{{ CONTENT }}
+	</section>
+    
+</div>
+    
+</body>
+</html>
+

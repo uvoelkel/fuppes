@@ -1,0 +1,6 @@
+if ! test -f @localstatedir@/lib/fuppes/fuppes.cfg; then
+    cp @localstatedir@/lib/fuppes/fuppes.cfg.default @localstatedir@/lib/fuppes/fuppes.cfg
+fi
+useradd -d @localstatedir@/lib/fuppes -s /bin/false fuppes
+chown -R fuppes:fuppes @localstatedir@/lib/fuppes
+chmod -R 775 @localstatedir@/lib/fuppes
