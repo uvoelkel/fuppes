@@ -141,7 +141,6 @@ fi
 have_event=no
 AH_TEMPLATE([HAVE_LIBEVENT2], [])
 #if test "x$have_ev" = "xno"; then
-
 #    if test "x$is_windows" = "xfalse"; then
 #        PKG_CHECK_MODULES(LIBEVENT2, libevent_pthreads >= 2.0, have_event=yes, have_event=no)
 #    else
@@ -157,7 +156,8 @@ fi
 
 if test "x$have_event" = "xno"; then
     if test "x$have_ev" = "xno"; then
-        AC_MSG_ERROR("you need either libev or libevent")
+        AC_MSG_ERROR("libev not found")
+        #you need either libev or libevent
     fi
 fi
 
