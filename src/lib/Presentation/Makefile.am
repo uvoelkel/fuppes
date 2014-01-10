@@ -12,4 +12,21 @@ libfuppes_presentation_la_SOURCES = \
     PageStart.h \
     PageStart.cpp \
     PageDatabase.h \
-    PageDatabase.cpp 
+    PageDatabase.cpp
+
+libfuppes_presentation_la_SOURCES += \
+    PageDevice.h \
+    PageDevice.cpp \
+    PageBrowse.h \
+    PageBrowse.cpp \
+    PageConfig.h \
+    PageConfig.cpp \
+    PagePlaylist.h \
+    PagePlaylist.cpp \
+    PageLog.h \
+    PageLog.cpp \
+    PageDebug.h \
+    PageDebug.cpp \
+    PageJsTest.h \
+    PageJsTest.cpp
+

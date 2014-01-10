@@ -233,20 +233,6 @@ libfuppes_la_SOURCES += \
     lib/ConnectionManager/ConnectionManagerDescription.cpp\
     lib/GENA/SubscriptionMgr.cpp\
     lib/GENA/EventNotification.cpp\
-    lib/Presentation/PageDevice.h \
-    lib/Presentation/PageDevice.cpp \
-    lib/Presentation/PageBrowse.h \
-    lib/Presentation/PageBrowse.cpp \
-    lib/Presentation/PageConfig.h \
-    lib/Presentation/PageConfig.cpp \
-    lib/Presentation/PagePlaylist.h \
-    lib/Presentation/PagePlaylist.cpp \
-    lib/Presentation/PageLog.h \
-    lib/Presentation/PageLog.cpp \
-    lib/Presentation/PageDebug.h \
-    lib/Presentation/PageDebug.cpp \
-    lib/Presentation/PageJsTest.h \
-    lib/Presentation/PageJsTest.cpp \
     lib/XMSMediaReceiverRegistrar/XMSMediaReceiverRegistrar.h\
     lib/XMSMediaReceiverRegistrar/XMSMediaReceiverRegistrar.cpp\
     lib/XMSMediaReceiverRegistrar/XMSMediaReceiverRegistrarDescription.cpp\
