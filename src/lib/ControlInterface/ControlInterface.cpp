@@ -71,6 +71,8 @@ ControlInterface::ControlInterface(Fuppes::Core* fuppes, Fuppes::FuppesConfig& f
 
     m_actionMap["GetCharset"] = new ControlAction("GetCharset", &ControlInterface::execGetCharset);
     m_actionMap["SetCharset"] = new ControlAction("SetCharset", &ControlInterface::execSetCharset);
+    m_actionMap["GetTempDir"] = new ControlAction("GetTempDir", &ControlInterface::execGetTempDir);
+	m_actionMap["SetTempDir"] = new ControlAction("SetTempDir", &ControlInterface::execSetTempDir);
 
     m_actionMap["GetUuid"] = new ControlAction("GetUuid", &ControlInterface::execGetUuid);
 	m_actionMap["SetUuid"] = new ControlAction("SetUuid", &ControlInterface::execSetUuid);
@@ -478,6 +480,18 @@ ControlInterface::ErrorCode ControlInterface::execSetCharset(const ControlAction
     m_fuppesConfig.globalSettings.localCharset = iter->value;
     m_fuppesConfig.save();
     return ControlInterface::RestartRequired;
+}
+
+ControlInterface::ErrorCode ControlInterface::execGetTempDir(const ControlActionParams params, ControlActionParam &result)
+{
+    result.name = "TempDir";
+    result.value = m_fuppesConfig.globalSettings.tempDir;
+    return ControlInterface::Ok;
+}
+
+ControlInterface::ErrorCode ControlInterface::execSetTempDir(const ControlActionParams params, ControlActionParam &result)
+{
+	return ControlInterface::Error;
 }
 
 

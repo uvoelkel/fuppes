@@ -90,6 +90,10 @@ std::string PageConfig::content()
   result << "<div class=\"grid_9\"><input type=\"text\" name=\"cfg_charset\" id=\"cfg_charset\" class=\"cfg_input\" data-function=\"Charset\" /></div>";
   result << "<div class=\"clear\"></div>";
 
+  result << "<div class=\"grid_3\"><label for=\"cfg_charset\">temp dir</label></div>";
+  result << "<div class=\"grid_9\"><input type=\"text\" name=\"cfg_tempdir\" id=\"cfg_tempdir\" class=\"cfg_input\" data-function=\"TempDir\" /></div>";
+  result << "<div class=\"clear\"></div>";
+
 
   result << "<div class=\"grid_3\"><label for=\"cfg_charset\">uuid</label></div>";
   result << "<div class=\"grid_9\"><input type=\"text\" name=\"cfg_uuid\" id=\"cfg_uuid\" class=\"cfg_input\" data-function=\"Uuid\" /></div>";

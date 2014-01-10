@@ -116,6 +116,9 @@ class ControlInterface
         ControlInterface::ErrorCode execGetCharset(const ControlActionParams params, ControlActionParam &result);
         ControlInterface::ErrorCode execSetCharset(const ControlActionParams params, ControlActionParam &result);
 
+        ControlInterface::ErrorCode execGetTempDir(const ControlActionParams params, ControlActionParam &result);
+		ControlInterface::ErrorCode execSetTempDir(const ControlActionParams params, ControlActionParam &result);
+
         ControlInterface::ErrorCode execGetUuid(const ControlActionParams params, ControlActionParam &result);
 		ControlInterface::ErrorCode execSetUuid(const ControlActionParams params, ControlActionParam &result);
         ControlInterface::ErrorCode execGetIsFixedUuid(const ControlActionParams params, ControlActionParam &result);
