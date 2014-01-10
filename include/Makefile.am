@@ -9,7 +9,6 @@ noinst_HEADERS = \
   fuppes_plugin_types.h \
   fuppes_database_plugin.h \
   fuppes_database_objects.h \
-  fuppes_db_connection_plugin.h \
   fuppes_encoder.h \
   fuppes_decoder.h \
   fuppes_transcoder.h
