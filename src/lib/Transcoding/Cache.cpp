@@ -12,7 +12,6 @@
 
 #include "../Log/Log.h"
 
-#include <iostream>
 #include <fstream>
 #include <string.h>
 
@@ -49,21 +48,23 @@ Cache::~Cache()
 }
 
 
-CacheItem* Cache::getItem(Transcoding::Item& item)
+CacheItem* Cache::getItem(const std::string identifier, const unsigned int releaseDelay /*= 5*/)
 {
 	Threading::MutexLocker locker(&m_mutex);
 
-	std::string key = item.getCacheIdentifier();
-
-	CacheItem* ci = m_cachedItems[key];
+	CacheItem* ci = m_cachedItems[identifier];
 	if (NULL == ci) {
-		ci = new CacheItem();
-		ci->m_item = &item;
-		m_cachedItems[key] = ci;
+		ci = new CacheItem(identifier);
+		ci->m_releaseDelay = releaseDelay;
+		m_cachedItems[identifier] = ci;
 	}
-	ci->m_refCount++;
+	ci->m_referenceCount++;
 
-	log("transcoding cache") << Log::Log::debug << "get item: " << ci->m_refCount << "::" << key;
+	if (ci->isPaused()) {
+		ci->resume();
+	}
+
+	log("transcoding cache") << Log::Log::debug << "get item: " << ci->m_referenceCount << "::" << identifier;
 	return ci;
 }
 
@@ -71,12 +72,16 @@ void Cache::releaseItem(CacheItem* item)
 {
 	Threading::MutexLocker locker(&m_mutex);
 
-	log("transcoding cache") << Log::Log::debug << "release item: " << item->m_refCount << "::" << item->m_item->getCacheIdentifier();
+	log("transcoding cache") << Log::Log::debug << "release item: " << item->m_referenceCount << "::" << item->m_identifier;
 
-	item->m_refCount--;
-	if (0 == item->m_refCount) {
+	item->m_referenceCount--;
+	if (0 == item->m_referenceCount) {
 
-		item->m_relCount = item->m_item->getDeviceSettings()->ReleaseDelay(item->m_item->originalExtension);
+		if (item->canPause()) {
+			item->pause();
+		}
+
+		item->m_releaseCount = item->m_releaseDelay;
 		if(!this->running()) {
 			this->close();
 			this->start();
@@ -85,44 +90,7 @@ void Cache::releaseItem(CacheItem* item)
 
 }
 
-/*
-CTranscodingCacheObject* Cache::GetCacheObject(std::string p_sFileName, CDeviceSettings* deviceSettings)
-{
-	Threading::MutexLocker locker(&m_mutex);
 
-	CTranscodingCacheObject* obj = m_CachedObjects[p_sFileName + deviceSettings->name()];
-	if (NULL == obj) {
-		obj = new CTranscodingCacheObject(m_pluginManager, deviceSettings);
-		m_CachedObjects[p_sFileName + deviceSettings->name()] = obj;
-		obj->m_sInFileName = p_sFileName;
-	}
-
-	obj->m_nRefCount++;
-	obj->ResetReleaseCount();
-
-	return obj;
-}
-
-void Cache::ReleaseCacheObject(CTranscodingCacheObject* pCacheObj)
-{
-    Threading::MutexLocker locker(&m_mutex);
-
-	if(!this->running()) {
-		this->start();
-	}
-
-	stringstream sLog;
-	sLog << "release object \"" << pCacheObj->m_sInFileName << "\"" << endl <<
-				"ref count: " << pCacheObj->m_nRefCount << endl <<
-				"delay: " << pCacheObj->ReleaseCountOrig();
-	log("transcoding", Log::Log::extended) << sLog.str();
-
-	pCacheObj->m_nRefCount--;
-  
-  // todo: pause transcoding if ref count == 0
-  
-}
-*/
 
 void Cache::run()
 {
@@ -137,11 +105,11 @@ void Cache::run()
 	    for(m_cachedItemsIterator = m_cachedItems.begin(); m_cachedItemsIterator != m_cachedItems.end(); ) {
 	    	item = (*m_cachedItemsIterator).second;
       
-            if(0 == item->m_refCount && 0 == item->m_relCount) {
+            if(0 == item->m_referenceCount && 0 == item->m_releaseCount) {
             	iter = m_cachedItemsIterator;
             	iter++;
 
-                if(item->m_item->isThreaded() && !item->finished()) {
+                if(item->m_threaded && !item->finished()) {
                 	item->stop();
                     m_cachedItemsIterator++;
                     continue;
@@ -149,20 +117,14 @@ void Cache::run()
 
                 log("transcoding cache") << Log::Log::debug << "delete item:" << (*m_cachedItemsIterator).first;
 
-				/*stringstream sLog;
-				sLog << "delete object \"" << pCacheObj->m_sInFileName << "\"" << endl <<
-				"delay: " << pCacheObj->ReleaseCountOrig();
-		
-				CSharedLog::Log(L_EXT, __FILE__, __LINE__, sLog.str().c_str());*/
-						 
 				m_cachedItems.erase(m_cachedItemsIterator);
 				item->stop();
 				item->close();
 				delete item;
 				m_cachedItemsIterator = iter;
             }
-            else if(0 == item->m_refCount) {
-            	item->m_relCount--;
+            else if(0 == item->m_referenceCount) {
+            	item->m_releaseCount--;
                 m_cachedItemsIterator++;
             }
             else {

@@ -1,7 +1,7 @@
 /*
  * This file is part of fuppes
  *
- * (c) 2013 Ulrich Völkel <u-voelkel@users.sourceforge.net>
+ * (c) 2013-2014 Ulrich Völkel <u-voelkel@users.sourceforge.net>
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code.
@@ -15,20 +15,25 @@
 
 using namespace Transcoding;
 
-CacheItem::CacheItem() :
+CacheItem::CacheItem(const std::string identifier) :
 	Threading::Thread("transcoding cache item")
 {
+	m_identifier = identifier;
 	m_initialized = false;
-	m_item = NULL;
 
+	m_threaded = false;
 	m_completed = false;
 	m_error = false;
+	m_state = CacheItem::Invalid;
+
+	m_transcodeToFile = false;
 	m_decoder = NULL;
 	m_encoder = NULL;
 	m_transcoder = NULL;
 
-	m_refCount = 0;
-	m_relCount = 0;
+	m_referenceCount = 0;
+	m_releaseCount = 0;
+	m_releaseDelay = 0;
 
 	m_buffer = NULL;
 	m_bufferSize = 0;
@@ -65,15 +70,23 @@ CacheItem::~CacheItem()
 	}
 }
 
-bool CacheItem::init()
+bool CacheItem::init(Transcoding::Item& item)
 {
 	if (m_initialized) {
 		return false;
 	}
 
+	if (Transcoding::Item::Unknown == item.transcodeTarget) {
+		return false;
+	}
+
+	m_threaded = item.isThreaded();
+	m_transcodeToFile = (Transcoding::Item::File == item.transcodeTarget);
+
 	// open output file
-	if (Transcoding::Item::File == m_item->transcodeTarget && 0 != m_item->targetPath.compare(m_item->originalPath)) {
-		m_file.setFileName(m_item->targetPath);
+	if (Transcoding::Item::File == item.transcodeTarget && 0 != item.targetPath.compare(item.originalPath)) {
+		m_file.setFileName(item.targetPath);
+		m_targetPath = item.targetPath;
 		if (!m_file.open(fuppes::File::Write | fuppes::File::Truncate)) {
 			return false;
 		}
@@ -82,30 +95,30 @@ bool CacheItem::init()
 
 	if (NULL != m_transcoder) {
 
-		if (Transcoding::Item::File == m_item->transcodeTarget) {
+		if (Transcoding::Item::File == item.transcodeTarget) {
 			if (!m_file.isOpen()) {
 				return false;
 			}
 			m_file.close();
-			fuppes::File::remove(m_item->targetPath);
+			fuppes::File::remove(item.targetPath);
 		}
 
-		if (!m_transcoder->setup(*m_item)) {
+		if (!m_transcoder->setup(item)) {
 			return false;
 		}
 	}
 	else if (NULL != m_decoder && NULL != m_encoder) {
 
-		if (!m_decoder->openFile(m_item->originalPath)) {
+		if (!m_decoder->openFile(item.originalPath)) {
 			return false;
 		}
-		m_item->totalSamples = m_decoder->getTotalSamples();
+		item.totalSamples = m_decoder->getTotalSamples();
 
-		if (!m_encoder->setup(*m_item)) {
+		if (!m_encoder->setup(item)) {
 			m_decoder->closeFile();
 			return false;
 		}
-		m_item->guessedContentLength = m_encoder->guessContentLength(m_item->totalSamples);
+		item.guessedContentLength = m_encoder->guessContentLength(item.totalSamples);
 
 		m_bufferSize = m_decoder->getBufferSize();
 		m_buffer = new unsigned char[m_bufferSize];
@@ -116,12 +129,17 @@ bool CacheItem::init()
 	}
 
 	m_initialized = true;
+	m_state = CacheItem::Idle;
 	return true;
 }
 
 bool CacheItem::transcode()
 {
-	if (m_item->isThreaded()) {
+	if (CacheItem::Idle != m_state) {
+		return false;
+	}
+
+	if (m_threaded) {
 		this->start();
 	}
 	else {
@@ -131,6 +149,54 @@ bool CacheItem::transcode()
 	return true;
 }
 
+
+bool CacheItem::canPause()
+{
+	if (!m_threaded) {
+		return false;
+	}
+
+	if (m_completed || m_error) {
+		return false;
+	}
+
+	// the ability to pause depends on the transcoder
+	if (NULL != m_transcoder) {
+		return m_transcoder->canPause();
+	}
+	// a combination of de-/encoder can always be paused
+	else if (NULL != m_decoder && NULL != m_encoder) {
+		return true;
+	}
+
+	return false;
+}
+
+bool CacheItem::isPaused()
+{
+	return (CacheItem::Paused == m_state);
+}
+
+void CacheItem::pause()
+{
+	if (!canPause()) {
+		return;
+	}
+
+	m_state = CacheItem::Paused;
+}
+
+void CacheItem::resume()
+{
+	if (!isPaused()) {
+		return;
+	}
+
+	m_state = CacheItem::Running;
+}
+
+
+
 void CacheItem::run()
 {
 	this->doTranscode();
@@ -138,14 +204,14 @@ void CacheItem::run()
 
 void CacheItem::doTranscode()
 {
-
 	m_error = false;
+	m_state = CacheItem::Running;
 
 	std::cout << "CacheItem :: start transcoding loop: " << threadId() << std::endl;
 
 	if (NULL != m_transcoder) {
 
-		if (Transcoding::Item::File == m_item->transcodeTarget) {
+		if (m_transcodeToFile) {
 
 			int ret = 0;
 			while (!stopRequested()) {
@@ -156,18 +222,15 @@ void CacheItem::doTranscode()
 					break;
 				}
 
-				if (m_item->isThreaded()) {
+				if (m_threaded) {
 					this->msleep(200);
 				}
-				m_dataSize = fuppes::File::getSize(m_item->targetPath);
+				m_dataSize = fuppes::File::getSize(m_targetPath);
 			}
 
 		}
-		else if (Transcoding::Item::Memory == m_item->transcodeTarget) {
-
-		}
 		else {
-			m_error = true;
+			// todo
 		}
 
 	}
@@ -179,6 +242,11 @@ void CacheItem::doTranscode()
 		int encRet = 0;
 
 		while (!stopRequested()) {
+
+			if (CacheItem::Paused == m_state) {
+				this->msleep(200);
+				continue;
+			}
 
 			samples = m_decoder->decode(m_buffer, m_bufferSize, &bytes);
 
@@ -230,10 +298,12 @@ void CacheItem::doTranscode()
 	}
 
 	m_completed = !stopRequested() && !m_error;
+	m_state = m_completed ? CacheItem::Completed : CacheItem::Error;
 
-	if (m_completed && Transcoding::Item::File == m_item->transcodeTarget && m_item->isThreaded()) {
-		if (fuppes::File::move(m_item->targetPath, m_item->targetPath + "_complete")) {
-			m_item->targetPath += "_complete";
+	// move completed files for reuse
+	if (m_completed && m_transcodeToFile && m_threaded) {
+		if (fuppes::File::move(m_targetPath, m_targetPath + "_complete")) {
+			m_targetPath += "_complete";
 		}
 	}
 

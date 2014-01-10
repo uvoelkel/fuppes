@@ -87,6 +87,14 @@ namespace Log
                 return *this;
             }
 
+            inline Log& operator <<(unsigned int i)
+            {
+                LOGNULL
+                LOGACTIVE
+                m_logger->log(i);
+                return *this;
+            }
+
             inline Log& operator <<(fuppes_off_t o)
             {
                 LOGNULL

@@ -76,8 +76,8 @@ int RequestItem::getAudioBitrate()
 
 bool RequestItem::isTranscoded()
 {
-    if (!transcodeSteps.empty()) {
-        return (Transcoding::Item::Threaded == transcodeSteps.back());
+    if (!m_transcodeSteps.empty()) {
+        return (Transcoding::Item::Threaded == m_transcodeSteps.back());
     }
     else {
         return false;

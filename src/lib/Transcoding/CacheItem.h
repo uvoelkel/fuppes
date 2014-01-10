@@ -1,7 +1,7 @@
 /*
  * This file is part of fuppes
  *
- * (c) 2013 Ulrich Völkel <u-voelkel@users.sourceforge.net>
+ * (c) 2013-2014 Ulrich Völkel <u-voelkel@users.sourceforge.net>
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code.
@@ -27,23 +27,43 @@ namespace Transcoding
 	class CacheItem: public Threading::Thread
 	{
 		public:
-			CacheItem();
+
+			enum State {
+				Invalid,
+				Idle,
+				Running,
+				Paused,
+				Completed,
+				Error
+			};
+
+			CacheItem(const std::string identifier);
 			~CacheItem();
 
-			bool init();
+			bool init(Transcoding::Item& item);
 			bool transcode();
 
-			bool						m_initialized;
-			Transcoding::Item*			m_item;
+			bool canPause();
+			bool isPaused();
+			void pause();
+			void resume();
 
+			std::string					m_identifier;
+			bool						m_initialized;
+
+			bool						m_threaded;
 			bool						m_completed;
 			bool						m_error;
+			State						m_state;
+
+			bool						m_transcodeToFile;
 			Plugin::AbstractDecoder*	m_decoder;
 			Plugin::AbstractEncoder*	m_encoder;
 			Plugin::AbstractTranscoder*	m_transcoder;
 
-			int	m_refCount;
-			int m_relCount;
+			unsigned int	m_referenceCount;
+			unsigned int 	m_releaseCount;
+			unsigned int 	m_releaseDelay;
 
 			// the buffer holding the decoder result
 			unsigned char*				m_buffer;
@@ -54,6 +74,7 @@ namespace Transcoding
 			fuppes_off_t				m_dataSize;
 
 			fuppes::File				m_file;
+			std::string					m_targetPath;
 
 		private:
 			void run();

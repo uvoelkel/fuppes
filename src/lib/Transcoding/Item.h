@@ -15,7 +15,7 @@
 #endif
 
 #include <string>
-#include <vector>
+#include <deque>
 
 #include "CacheItem.h"
 #include "../DeviceIdentification/DeviceSettings.h"
@@ -64,8 +64,9 @@ namespace Transcoding
             virtual bool isVideoItem() const = 0;
             virtual bool isImageItem() const = 0;
 
-            //int transcodeType;
-            bool isThreaded();
+            bool isThreaded() {
+            	return m_threaded;
+            }
 
             Transcoding::Item::TranscodeTarget transcodeTarget;
 
@@ -88,14 +89,20 @@ namespace Transcoding
 				return transcoderCommand;
 			}
 
+			void appendTranscodeStep(Transcoding::Item::TranscodeType step);
+
+            bool							m_threaded;
+            std::deque<TranscodeType>    	m_transcodeSteps;
+            Threading::Mutex				m_transcodeStepsMutex;
+
             int width;
             int height;
-
-            std::vector<TranscodeType>    transcodeSteps;
 
             Transcoding::CacheItem* cacheItem;
             unsigned char* buffer;
             fuppes_off_t bufferSize;
+
+
     };
 }
 

@@ -28,7 +28,8 @@ Item::~Item()
 void Item::clear()
 {
     transcodeTarget = Item::Unknown;
-    transcodeSteps.clear();
+    m_transcodeSteps.clear();
+    m_threaded = false;
 
     decoder = "";
     encoder = "";
@@ -47,12 +48,13 @@ void Item::clear()
     height = 0;
 }
 
-bool Item::isThreaded()
+
+void Item::appendTranscodeStep(Transcoding::Item::TranscodeType step)
 {
-    for(size_t i = 0; i < transcodeSteps.size(); i++) {
-        if(Transcoding::Item::Threaded == transcodeSteps.at(i)) {
-            return true;
-        }
-    }
-    return false;
+	Threading::MutexLocker locker(&m_transcodeStepsMutex);
+	m_transcodeSteps.push_back(step);
+
+	if (Transcoding::Item::Threaded == step) {
+		m_threaded = true;
+	}
 }

@@ -49,6 +49,7 @@ namespace Log
 
             // number types
             void log(int i) { m_stream << i << " "; }
+            void log(unsigned int i) { m_stream << i << " "; }
             void log(fuppes_off_t o) { m_stream << o << " "; }
             void log(size_t s) { m_stream << s << " "; }
 

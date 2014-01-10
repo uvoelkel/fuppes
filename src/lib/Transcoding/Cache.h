@@ -31,7 +31,7 @@ namespace Transcoding
     		Cache(Plugin::Manager& pluginManager);
             ~Cache();
 
-            CacheItem* getItem(Transcoding::Item& item);
+            CacheItem* getItem(const std::string identifier, const unsigned int releaseDelay = 5);
             void releaseItem(CacheItem* item);
 
       private:

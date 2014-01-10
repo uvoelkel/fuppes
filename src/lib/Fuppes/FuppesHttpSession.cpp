@@ -361,7 +361,7 @@ Fuppes::HttpResponse* FuppesHttpSession::handleItemRequest(Fuppes::HttpRequest* 
     }
 
     // check for transcoding by device settings
-    if (0 == m_item.transcodeSteps.size() && request->getDeviceSettings()->DoTranscode(m_item.extension, m_item.details->audioCodec, m_item.details->videoCodec)) {
+    if (0 == m_item.m_transcodeSteps.size() && request->getDeviceSettings()->DoTranscode(m_item.extension, m_item.details->audioCodec, m_item.details->videoCodec)) {
 
         TRANSCODING_TYPE tt = request->getDeviceSettings()->GetTranscodingType(m_item.extension);
         switch (tt) {
@@ -370,10 +370,10 @@ Fuppes::HttpResponse* FuppesHttpSession::handleItemRequest(Fuppes::HttpRequest* 
                 break;
             case TT_THREADED_TRANSCODER:
             case TT_THREADED_DECODER_ENCODER:
-                m_item.transcodeSteps.push_back(Transcoding::Item::Threaded);
+                m_item.appendTranscodeStep(Transcoding::Item::Threaded);
                 break;
             case TT_TRANSCODER:
-                m_item.transcodeSteps.push_back(Transcoding::Item::Oneshot);
+                m_item.appendTranscodeStep(Transcoding::Item::Oneshot);
                 break;
         }
 
@@ -383,13 +383,13 @@ Fuppes::HttpResponse* FuppesHttpSession::handleItemRequest(Fuppes::HttpRequest* 
     }
 
     // get device specific mime type and extension
-    if (0 == m_item.transcodeSteps.size()) {
+    if (0 == m_item.m_transcodeSteps.size()) {
         m_item.mimeType = request->getDeviceSettings()->MimeType(m_item.extension);
         m_item.extension = request->getDeviceSettings()->Extension(m_item.extension);
     }
 
     // initialize transcoding
-    if (0 != m_item.transcodeSteps.size()) {
+    if (0 != m_item.m_transcodeSteps.size()) {
         if (false == m_transcoder.initializeTranscoding(m_item)) {
             return new Fuppes::HttpResponse(Http::INTERNAL_SERVER_ERROR);
         }
@@ -405,7 +405,7 @@ Fuppes::HttpResponse* FuppesHttpSession::handleItemRequest(Fuppes::HttpRequest* 
     // create the response
     response = this->createItemResponse(m_item);
 
-    if (0 == request->getMethod().compare("GET") && 0 < m_item.transcodeSteps.size()) {
+    if (0 == request->getMethod().compare("GET") && 0 < m_item.m_transcodeSteps.size()) {
 
         // execute non threaded resp. start threaded transcoding
         if (false == m_transcoder.executeTranscoding(m_item)) {
@@ -431,7 +431,7 @@ Fuppes::HttpResponse* FuppesHttpSession::handleItemRequest(Fuppes::HttpRequest* 
 Fuppes::HttpResponse* FuppesHttpSession::createItemResponse(Fuppes::RequestItem& item)
 {
     // no transcoding
-    if (item.transcodeSteps.empty()) {
+    if (0 == m_item.m_transcodeSteps.size()) {
         return new Fuppes::HttpResponseFile(Http::OK, m_item.mimeType, m_item.targetPath);
     }
 
@@ -468,7 +468,7 @@ Fuppes::HttpResponse* FuppesHttpSession::checkAlbumArtRequest(Fuppes::RequestIte
         item.type = ITEM_IMAGE_ITEM;
         item.extension = item.details->albumArtExtension;
         item.mimeType = item.details->albumArtMimeType;
-        item.transcodeSteps.push_back(Transcoding::Item::ExtractImage);
+        item.appendTranscodeStep(Transcoding::Item::ExtractImage);
     }
 
     else if (item.isVideo()) {
@@ -498,7 +498,7 @@ Fuppes::HttpResponse* FuppesHttpSession::checkUriTranscoding(Fuppes::RequestItem
         // convert image
         if (item.extension != uriExt) {
             item.extension = uriExt;
-            item.transcodeSteps.push_back(Transcoding::Item::ConvertImage);
+            item.appendTranscodeStep(Transcoding::Item::ConvertImage);
         }
 
         // scale image
@@ -517,7 +517,7 @@ Fuppes::HttpResponse* FuppesHttpSession::checkUriTranscoding(Fuppes::RequestItem
         if ((0 < width && width != item.details->iv_width) || (0 < height && item.details->iv_height)) {
             item.width = (0 < width ? width : item.details->iv_width);
             item.height = (0 < height ? height : item.details->iv_height);
-            item.transcodeSteps.push_back(Transcoding::Item::ScaleImage);
+            item.appendTranscodeStep(Transcoding::Item::ScaleImage);
         }
     }
 

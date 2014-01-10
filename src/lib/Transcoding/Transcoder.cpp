@@ -30,9 +30,9 @@ bool Transcoder::initializeTranscoding(Transcoding::Item& item)
     bool cached = false;
     item.transcodeTarget = Transcoding::Item::Unknown;
 
-    for (size_t i = 0; i < item.transcodeSteps.size(); i++) {
+    for (size_t i = 0; i < item.m_transcodeSteps.size(); i++) {
 
-        switch (item.transcodeSteps.at(i)) {
+        switch (item.m_transcodeSteps.at(i)) {
 
             case Transcoding::Item::None:
                 return false;
@@ -84,12 +84,12 @@ bool Transcoder::initializeTranscoding(Transcoding::Item& item)
 		// check if the file is already completely transcoded
 		if (fuppes::File::exists(item.targetPath + "_complete")) {
 			item.targetPath += "_complete";
-			item.transcodeSteps.clear();
+			item.m_transcodeSteps.clear();
 			return true;
 		}
 
 
-    	item.cacheItem = m_cache.getItem(item);
+    	item.cacheItem = m_cache.getItem(item.getCacheIdentifier(), item.getDeviceSettings()->ReleaseDelay(item.originalExtension));
     	if (item.cacheItem->m_initialized) {
 			return true;
     	}
@@ -126,7 +126,7 @@ bool Transcoder::initializeTranscoding(Transcoding::Item& item)
 			return false;
 		}
 
-		if (!item.cacheItem->init()) {
+		if (!item.cacheItem->init(item)) {
 			m_cache.releaseItem(item.cacheItem);
 			item.cacheItem = NULL;
 			return false;
@@ -141,9 +141,11 @@ bool Transcoder::executeTranscoding(Transcoding::Item& item) const
 
     std::cout << "Transcoder::executeTranscoding" << std::endl;
 
-    for (size_t i = 0; i < item.transcodeSteps.size(); i++) {
+    Threading::MutexLocker locker(&item.m_transcodeStepsMutex);
 
-        switch (item.transcodeSteps.at(i)) {
+    while (!item.m_transcodeSteps.empty()) {
+
+        switch (item.m_transcodeSteps.front()) {
 
             case Transcoding::Item::None:
             case Transcoding::Item::Rename:
@@ -175,6 +177,8 @@ bool Transcoder::executeTranscoding(Transcoding::Item& item) const
             	item.cacheItem->transcode();
                 break;
         }
+
+        item.m_transcodeSteps.pop_front();
     }
 
     return true;
