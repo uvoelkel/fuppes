@@ -1,5 +1,7 @@
 'use strict';
 
+(function($) {
+
 $(document).ready(function() {
 
 	var action = new FuppesControlAction({action : 'GetVirtualContainers'})
@@ -121,3 +123,5 @@ function browseMetadata(objectId, vfolder)
         });
 }
 
+
+})(jQuery);

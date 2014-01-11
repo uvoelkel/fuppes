@@ -1,3 +1,4 @@
+/*
 function updateStatus() {
 	
 	var request = new FuppesControl({
@@ -9,11 +10,12 @@ function updateStatus() {
 		}
 	}).send();	
 }
+*/
 
 window.addEvent('domready', function() {	
 	
 	if (0 < $$('.database-status').length) {	
-		updateStatus();
+		//updateStatus();
 	}
 		
 	if(!$('dbcontrols')) {

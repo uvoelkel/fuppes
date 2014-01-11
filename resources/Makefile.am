@@ -25,6 +25,7 @@ dist_pixmaps_DATA = \
 	jquery-1.10.2.min.js \
 	fuppes.jquery.js \
 	fuppes-browse.jquery.js \
+	fuppes-config.jquery.js \
 	fuppes-database.jquery.js
 	
 

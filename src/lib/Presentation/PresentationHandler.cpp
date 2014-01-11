@@ -56,9 +56,11 @@ std::map<std::string, PresentationFile> PresentationFiles::create() // static
     map["jquery-1.10.2.min.js"] = PresentationFile::create("text/javascript");
 
     map["fuppes.jquery.js"] = PresentationFile::create("text/javascript");
+    map["fuppes-browse.jquery.js"] = PresentationFile::create("text/javascript");
+    map["fuppes-config.jquery.js"] = PresentationFile::create("text/javascript");
     map["fuppes-database.jquery.js"] = PresentationFile::create("text/javascript");
 
-    map["fuppes-browse.jquery.js"] = PresentationFile::create("text/javascript");
+
 
     return map;
 }

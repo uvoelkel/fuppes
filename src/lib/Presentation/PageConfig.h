@@ -38,7 +38,7 @@ class PageConfig: public Presentation::PresentationPage
   public:
     std::string alias() { return "config"; }
     std::string title() { return "configuration"; }
-    std::string js()    { return "fuppes-config.js"; }
+    std::string js()    { return "fuppes-config.jquery.js"; }
     
     std::string content();
 };
