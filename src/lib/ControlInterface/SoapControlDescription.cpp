@@ -14,6 +14,7 @@ static const std::string  soapControlDescription =
 ""
 "<actionList>"
 
+		/*
 
 "<action>"
 "  <name>GetVersion</name>"
@@ -47,6 +48,47 @@ static const std::string  soapControlDescription =
 "    </argument>"
 "  </argumentList>"
 "</action>"
+
+*/
+
+"<action>"
+"  <name>GetSystemInfo</name>"
+"  <argumentList>"
+"    <argument>"
+"      <name>SystemInfo</name>"
+"      <direction>in</direction>"
+"      <relatedStateVariable>A_ARG_TYPE_SystemInfoValue</relatedStateVariable>"
+"    </argument>"
+"	 <argument>"
+"      <name>Result</name>"
+"      <direction>out</direction>"
+"      <relatedStateVariable>A_ARG_TYPE_StringValue</relatedStateVariable>"
+"    </argument>"
+"  </argumentList>"
+"</action>"
+
+"<action>"
+"  <name>GetSystemPath</name>"
+"  <argumentList>"
+"    <argument>"
+"      <name>SystemPath</name>"
+"      <direction>in</direction>"
+"      <relatedStateVariable>A_ARG_TYPE_SystemPathValue</relatedStateVariable>"
+"    </argument>"
+"	 <argument>"
+"      <name>Result</name>"
+"      <direction>out</direction>"
+"      <relatedStateVariable>A_ARG_TYPE_StringValue</relatedStateVariable>"
+"    </argument>"
+"    <argument>"
+"      <name>Description</name>"
+"      <direction>out</direction>"
+"      <relatedStateVariable>A_ARG_TYPE_StringValue</relatedStateVariable>"
+"    </argument>"
+"  </argumentList>"
+"</action>"
+
+
 
 
 
@@ -675,7 +717,29 @@ static const std::string  soapControlDescription =
 "    </allowedValueList>"
 "  </stateVariable>"
 ""
-
+"  <stateVariable sendEvents=\"no\">"
+"    <name>A_ARG_TYPE_SystemInfoValue</name>"
+"    <dataType>string</dataType>"
+"    <allowedValueList>"
+"      <allowedValue>Version</allowedValue>"
+"      <allowedValue>Hostname</allowedValue>"
+"      <allowedValue>Uptime</allowedValue>"
+"    </allowedValueList>"
+"  </stateVariable>"
+""
+"  <stateVariable sendEvents=\"no\">"
+"    <name>A_ARG_TYPE_SystemPathValue</name>"
+"    <dataType>string</dataType>"
+"    <allowedValueList>"
+"      <allowedValue>Configuration</allowedValue>"
+"      <allowedValue>Devices</allowedValue>"
+"      <allowedValue>Vfolders</allowedValue>"
+"      <allowedValue>Plugins</allowedValue>"
+"      <allowedValue>Data</allowedValue>"
+"      <allowedValue>Thumbnails</allowedValue>"
+"    </allowedValueList>"
+"  </stateVariable>"
+""
 
 
 

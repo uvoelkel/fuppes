@@ -103,6 +103,9 @@ class ControlInterface
 		ControlInterface::ErrorCode execGetHostname(const ControlActionParams params, ControlActionParam &result);
 		ControlInterface::ErrorCode execGetUptime(const ControlActionParams params, ControlActionParam &result);
 
+		ControlInterface::ErrorCode execGetSystemInfo(const ControlActionParams params, ControlActionParam &result);
+		ControlInterface::ErrorCode execGetSystemPath(const ControlActionParams params, ControlActionParams &result);
+
 		// configuration
 		ControlInterface::ErrorCode execGetConfigFileName(const ControlActionParams params, ControlActionParam &result);
 

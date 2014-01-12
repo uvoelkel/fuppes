@@ -60,6 +60,8 @@ ControlInterface::ControlInterface(Fuppes::Core* fuppes, Fuppes::FuppesConfig& f
 	m_actionMap["GetVersion"] = new ControlAction("GetVersion", &ControlInterface::execGetVersion);
 	m_actionMap["GetHostname"] = new ControlAction("GetHostname", &ControlInterface::execGetHostname);
 	m_actionMap["GetUptime"] = new ControlAction("GetUptime", &ControlInterface::execGetUptime);
+	m_actionMap["GetSystemInfo"] = new ControlAction("GetSystemInfo", &ControlInterface::execGetSystemInfo);
+	m_actionMap["GetSystemPath"] = new ControlAction("GetSystemPath", &ControlInterface::execGetSystemPath);
 
 	// configuration
 	m_actionMap["GetConfigFileName"] = new ControlAction("GetConfigFileName", &ControlInterface::execGetConfigFileName);
@@ -372,6 +374,67 @@ ControlInterface::ErrorCode ControlInterface::execGetUptime(const ControlActionP
 
 	result.name = "Uptime";
 	result.value = uptime.str();
+	return ControlInterface::Ok;
+}
+
+ControlInterface::ErrorCode ControlInterface::execGetSystemInfo(const ControlActionParams params, ControlActionParam &result)
+{
+	ControlActionParamsIter iter = params.begin();
+	if (params.end() == iter || "SystemInfo" != iter->name) {
+		return ControlInterface::MissingInputParam;
+	}
+
+	result.name = "Result";
+
+	if (0 == iter->value.compare("Version")) {
+
+		result.value = m_fuppesConfig.globalSettings.appVersion;
+	}
+	else if (0 == iter->value.compare("Hostname")) {
+
+		result.value = m_fuppesConfig.networkSettings.hostname;
+	}
+	else if (0 == iter->value.compare("Uptime")) {
+
+		stringstream uptime;
+		fuppes::DateTime now = fuppes::DateTime::now();
+		uptime << (now.toInt() - m_fuppes->getConfig()->globalSettings.startTime.toInt());
+		result.value = uptime.str();
+	}
+	else {
+		return ControlInterface::Error;
+	}
+
+	return ControlInterface::Ok;
+}
+
+ControlInterface::ErrorCode ControlInterface::execGetSystemPath(const ControlActionParams params, ControlActionParams &result)
+{
+	ControlActionParamsIter iter = params.begin();
+	if (params.end() == iter || "SystemPath" != iter->name) {
+		return ControlInterface::MissingInputParam;
+	}
+
+	ControlActionParam res;
+	res.name = "Result";
+
+	ControlActionParam desc;
+	desc.name = "Description";
+
+	if (0 == iter->value.compare("Configuration")) {
+		res.value = m_fuppesConfig.configFilename;
+		desc.value = "the main fuppes configuration file";
+	}
+	/*else if (0 == iter->value.compare("Devices")) {
+	 ...
+	 }*/
+	else {
+		return ControlInterface::Error;
+	}
+
+	result.push_back(res);
+	result.push_back(desc);
+
 	return ControlInterface::Ok;
 }
 
