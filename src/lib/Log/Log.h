@@ -1,7 +1,7 @@
 /*
  * This file is part of fuppes
  *
- * (c) 2013 Ulrich Völkel <u-voelkel@users.sourceforge.net>
+ * (c) 2013-2014 Ulrich Völkel <u-voelkel@users.sourceforge.net>
  *
  * For the full copyright and license information, please view the COPYING
  * file that was distributed with this source code.
@@ -28,92 +28,92 @@
 
 namespace Log
 {
-    class Log
-    {
-        public:
-            enum Level
-            {
-                none = 0,
-                normal = 1 << 0,
-                extended = 1 << 1,
-                debug = 1 << 2,
+	class Log
+	{
+		public:
+			enum Level
+			{
+				none = 0,
+				normal = 1 << 0,
+				extended = 1 << 1,
+				debug = 1 << 2,
 
-                warning = 1 << 3,
-                error = 1 << 4
-            };
+				warning = 1 << 3,
+				error = 1 << 4
+			};
 
-            static void setType(Logger::Type type);
-            static void setLevel(const int level);
+			static void setType(Logger::Type type);
+			static void setLevel(const int level);
 
-            Log(const std::string sender, const Log::Level level, const std::string file, const int line);
-            ~Log();
+			Log(const std::string sender, const Log::Level level, const std::string file, const int line);
+			~Log();
 
-            inline Log& operator <<(Log::Level l)
-            {
-                LOGNULL
-                m_currentLevel = l;
-                return *this;
-            }
+			inline Log& operator <<(Log::Level l)
+			{
+				LOGNULL
+				m_currentLevel = l;
+				return *this;
+			}
 
-            // string types
-            inline Log& operator <<(const char* c)
-            {
-                LOGNULL
-                LOGACTIVE
-                m_logger->log(c);
-                return *this;
-            }
-            inline Log& operator <<(std::string s)
-            {
-                LOGNULL
-                LOGACTIVE
-                m_logger->log(s);
-                return *this;
-            }
+			// string types
+			inline Log& operator <<(const char* c)
+			{
+				LOGNULL
+				LOGACTIVE
+				m_logger->log(c);
+				return *this;
+			}
+			inline Log& operator <<(std::string s)
+			{
+				LOGNULL
+				LOGACTIVE
+				m_logger->log(s);
+				return *this;
+			}
 
-            // boolean types
-            inline Log& operator <<(bool b)
-            {
-                LOGNULL
-                LOGACTIVE
-                m_logger->log(b);
-                return *this;
-            }
+			// boolean types
+			inline Log& operator <<(bool b)
+			{
+				LOGNULL
+				LOGACTIVE
+				m_logger->log(b);
+				return *this;
+			}
 
-            // number types
-            inline Log& operator <<(int i)
-            {
-                LOGNULL
-                LOGACTIVE
-                m_logger->log(i);
-                return *this;
-            }
+			// number types
+			inline Log& operator <<(int i)
+			{
+				LOGNULL
+				LOGACTIVE
+				m_logger->log(i);
+				return *this;
+			}
 
-            inline Log& operator <<(unsigned int i)
-            {
-                LOGNULL
-                LOGACTIVE
-                m_logger->log(i);
-                return *this;
-            }
+			inline Log& operator <<(unsigned int i)
+			{
+				LOGNULL
+				LOGACTIVE
+				m_logger->log(i);
+				return *this;
+			}
 
-            inline Log& operator <<(fuppes_off_t o)
-            {
-                LOGNULL
-                LOGACTIVE
-                m_logger->log(o);
-                return *this;
-            }
+			inline Log& operator <<(fuppes_off_t o)
+			{
+				LOGNULL
+				LOGACTIVE
+				m_logger->log(o);
+				return *this;
+			}
 
-            inline Log& operator <<(size_t s)
-            {
-                LOGNULL
-                LOGACTIVE
-                m_logger->log(s);
-                return *this;
-            }
+			inline Log& operator <<(size_t s)
+			{
+				LOGNULL
+				LOGACTIVE
+				m_logger->log(s);
+				return *this;
+			}
 
-            static inline const std::string printf(const std::string format, ...)
+			static inline const std::string printf(const std::string format, ...)
 			{
 				va_list args;
 				va_start(args, format);
@@ -124,14 +124,14 @@ namespace Log
 				return buffer;
 			}
 
-        private:
-            static Logger::Type m_loggerType;
-            static int	m_loggerLevel;
+		private:
+			static Logger::Type m_loggerType;
+			static int m_loggerLevel;
 
-            Logger* m_logger;
-            Log::Level m_currentLevel;
+			Logger* m_logger;
+			Log::Level m_currentLevel;
 
-    };
+	};
 }
 
 #define log(sender) Log::Log(sender, Log::Log::normal, __FILE__, __LINE__)
