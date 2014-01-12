@@ -10,6 +10,7 @@ libfuppes_transcoding_la_SOURCES = \
     Cache.cpp \
     CacheItem.h \
     CacheItem.cpp \
+    Configuration.h \
     Transcoder.h \
     Transcoder.cpp \
     TranscoderExternalProcess.h \

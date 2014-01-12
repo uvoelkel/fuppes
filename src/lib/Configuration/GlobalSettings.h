@@ -22,37 +22,35 @@
 namespace Configuration
 {
 
-    class GlobalSettings: public BaseSettings
-    {
-        public:
-            GlobalSettings();
+	class GlobalSettings: public BaseSettings
+	{
+		public:
+			GlobalSettings();
 
-            void readConfig(ConfigFile& configFile) throw(Configuration::ReadException);
-            void setup(PathFinder& pathFinder) throw(Configuration::SetupException);
-            void writeConfig(ConfigFile& configFile) throw (Configuration::WriteException);
+			void readConfig(ConfigFile& configFile) throw (Configuration::ReadException);
+			void setup(PathFinder& pathFinder) throw (Configuration::SetupException);
+			void writeConfig(ConfigFile& configFile) throw (Configuration::WriteException);
 
-            std::string         applicationDir;
-            std::string         resourcesDir;
-            std::string         pluginDir;
+			std::string applicationDir;
+			std::string resourcesDir;
+			std::string pluginDir;
 
-            std::string         appName;
-            std::string         appFullName;
-            std::string         appVersion;
+			std::string appName;
+			std::string appFullName;
+			std::string appVersion;
 
-            std::string         osName;
-            std::string         osVersion;
+			std::string osName;
+			std::string osVersion;
 
-            std::string         localCharset;
+			std::string localCharset;
+			bool useFixedUUID;
+			std::string fixedUUID;
 
-            std::string         tempDir;
-            std::string         trashDir;
+			std::string trashDir;
 
-            bool                useFixedUUID;
-            std::string         fixedUUID;
-
-            std::string         uuid;
-            fuppes::DateTime    startTime;
-    };
+			std::string uuid;
+			fuppes::DateTime startTime;
+	};
 
 }
 

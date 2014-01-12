@@ -20,73 +20,79 @@ FuppesConfig::FuppesConfig()
 
 void FuppesConfig::load(const std::string appDir) throw (Configuration::ReadException)
 {
-    globalSettings.applicationDir = fuppes::Directory::appendTrailingSlash(appDir);
+	globalSettings.applicationDir = fuppes::Directory::appendTrailingSlash(appDir);
 
-    pathFinder.init(globalSettings.applicationDir);
+	pathFinder.init(globalSettings.applicationDir);
 
-    std::string filename = configFilename;
-    if (filename.empty()) {
-        filename = pathFinder.findInConfigPath("fuppes.cfg");
-    }
-    if (configFile.load(filename)) {
-        configFilename = filename;
-    }
-    else {
-        std::stringstream msg;
-        msg << "could not find a readable config file.";
-#ifndef WIN32
-        msg << std::endl <<
-                "make sure to either rename the file \"fuppes.cfg.default\" in \"" << FUPPES_LOCALSTATEDIR <<
-                "\" to \"fuppes.cfg\" or copy it to \"" << PathFinder::getXdgConfigHome() << "fuppes.cfg\"";
-#endif
-        throw Configuration::ReadException(msg.str());
-    }
+	std::string filename = configFilename;
+	if (filename.empty()) {
+		filename = pathFinder.findInConfigPath("fuppes.cfg");
+	}
+	if (configFile.load(filename)) {
+		configFilename = filename;
+	}
+	else {
+		std::stringstream msg;
+		msg << "could not find a readable config file.";
+		#ifndef WIN32
+		msg << std::endl <<
+		        "make sure to either rename the file \"fuppes.cfg.default\" in \"" << FUPPES_LOCALSTATEDIR <<
+		        "\" to \"fuppes.cfg\" or copy it to \"" << PathFinder::getXdgConfigHome() << "fuppes.cfg\"";
+		#endif
+		throw Configuration::ReadException(msg.str());
+	}
 
-    sharedObjects.readConfig(configFile);
+	sharedObjects.readConfig(configFile);
 
-    networkSettings.readConfig(configFile);
+	networkSettings.readConfig(configFile);
 
-    databaseSettings.readConfig(configFile);
+	databaseSettings.readConfig(configFile);
 
-    globalSettings.readConfig(configFile);
+	globalSettings.readConfig(configFile);
 
-    virtualContainerSettings.readConfig(configFile);
+	transcodingSettings.readConfig(configFile);
 
-    deviceIdentificationSettings.readConfig(configFile);
+	virtualContainerSettings.readConfig(configFile);
 
-    contentDatabaseSettings.readConfig(configFile);
+	deviceIdentificationSettings.readConfig(configFile);
+
+	contentDatabaseSettings.readConfig(configFile);
 }
 
 void FuppesConfig::setup() throw (Configuration::SetupException)
 {
-    sharedObjects.setup(pathFinder);
+	sharedObjects.setup(pathFinder);
 
-    networkSettings.setup(pathFinder);
+	networkSettings.setup(pathFinder);
 
-    databaseSettings.setup(pathFinder);
+	databaseSettings.setup(pathFinder);
 
-    globalSettings.setup(pathFinder);
+	globalSettings.setup(pathFinder);
 
-    virtualContainerSettings.setup(pathFinder);
+	transcodingSettings.setup(pathFinder);
 
-    deviceIdentificationSettings.setup(pathFinder, &virtualContainerSettings);
+	virtualContainerSettings.setup(pathFinder);
 
-    contentDatabaseSettings.setup(pathFinder, databaseSettings, globalSettings, sharedObjects);
+	deviceIdentificationSettings.setup(pathFinder, &virtualContainerSettings);
+
+	contentDatabaseSettings.setup(pathFinder, databaseSettings, globalSettings, sharedObjects);
 }
 
 void FuppesConfig::save() throw (Configuration::WriteException)
 {
-    sharedObjects.writeConfig(configFile);
+	sharedObjects.writeConfig(configFile);
 
-    networkSettings.writeConfig(configFile);
+	networkSettings.writeConfig(configFile);
 
-    databaseSettings.writeConfig(configFile);
+	databaseSettings.writeConfig(configFile);
 
-    globalSettings.writeConfig(configFile);
+	globalSettings.writeConfig(configFile);
 
-    virtualContainerSettings.writeConfig(configFile);
+	transcodingSettings.writeConfig(configFile);
 
-    deviceIdentificationSettings.writeConfig(configFile);
+	virtualContainerSettings.writeConfig(configFile);
 
-    configFile.save();
+	deviceIdentificationSettings.writeConfig(configFile);
+
+	configFile.save();
 }

@@ -17,28 +17,29 @@
 #include "../Plugin/Manager.h"
 #include "Item.h"
 #include "Cache.h"
+#include "Configuration.h"
 
 namespace Transcoding
 {
-    class Transcoder
-    {
-        public:
-            Transcoder(Plugin::Manager& pluginManager, const std::string tempDir);
+	class Transcoder
+	{
+		public:
+			Transcoder(Plugin::Manager& pluginManager, Transcoding::Configuration& configuration);
 
-            bool initializeTranscoding(Transcoding::Item& item);
-            bool executeTranscoding(Transcoding::Item& item) const;
-            void release(Transcoding::Item& item);
+			bool initializeTranscoding(Transcoding::Item& item);
+			bool executeTranscoding(Transcoding::Item& item) const;
+			void release(Transcoding::Item& item);
 
-        private:
+		private:
 
-            bool extractImageFromAudio(Transcoding::Item& item) const;
-            bool convertImage(Transcoding::Item& item) const;
-            bool scaleImage(Transcoding::Item& item) const;
+			bool extractImageFromAudio(Transcoding::Item& item) const;
+			bool convertImage(Transcoding::Item& item) const;
+			bool scaleImage(Transcoding::Item& item) const;
 
-            Plugin::Manager&        m_pluginManager;
-            std::string				m_tempDir;
-            Cache             		m_cache;
-    };
+			Plugin::Manager& m_pluginManager;
+			std::string m_tempDir;
+			Cache m_cache;
+	};
 }
 
 #endif // _TRANSCODING_TRANSCODER_H

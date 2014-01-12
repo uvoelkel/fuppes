@@ -47,12 +47,14 @@
         -->
         <local_charset>UTF-8</local_charset>
         
-        <temp_dir/>
-        
         <!-- if enabled = false a new uuid is created on each start-->
         <fixed_uuid enabled="false" />
     </global_settings>
 
+	<transcoding>
+		<!-- if empty %TEMP%/fuppes resp. /tmp/fuppes will be used -->
+		<temp_dir />
+	</transcoding>
 
     <!--
     enable virtual folder layouts 

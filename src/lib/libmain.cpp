@@ -242,7 +242,7 @@ fuppes_bool_t fuppes_init(int argc, char* argv[], fuppes_status_callback_t callb
         break;
         */
       case 't':
-          fuppesConfig.globalSettings.tempDir = optarg;
+          fuppesConfig.transcodingSettings.tempDirOpt = optarg;
         break;
       case 'p':
 	      fuppesConfig.globalSettings.pluginDir = optarg;

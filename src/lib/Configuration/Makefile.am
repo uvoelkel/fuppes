@@ -22,6 +22,8 @@ libfuppes_configuration_la_SOURCES = \
     NetworkSettings.cpp \
     ContentDatabase.h \
     ContentDatabase.cpp \
+    TranscodingSettings.h \
+    TranscodingSettings.cpp \
     VirtualContainerSettings.h \
     VirtualContainerSettings.cpp \
     DeviceIdentificationSettings.h \

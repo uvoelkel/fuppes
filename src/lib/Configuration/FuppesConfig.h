@@ -22,6 +22,7 @@
 #include "NetworkSettings.h"
 #include "DatabaseSettings.h"
 #include "GlobalSettings.h"
+#include "TranscodingSettings.h"
 #include "DeviceIdentificationSettings.h"
 #include "VirtualContainerSettings.h"
 #include "ContentDatabase.h"
@@ -32,45 +33,44 @@
 namespace Fuppes
 {
 
-    class FuppesConfig
-    {
-        public:
-            FuppesConfig();
-            void load(const std::string appDir) throw (Configuration::ReadException);
-            void setup() throw (Configuration::SetupException);
-            void save() throw (Configuration::WriteException);
+	class FuppesConfig
+	{
+		public:
+			FuppesConfig();
+			void load(const std::string appDir) throw (Configuration::ReadException);
+			void setup() throw (Configuration::SetupException);
+			void save() throw (Configuration::WriteException);
 
-            std::string                 configFilename;
+			std::string configFilename;
 
-            // shared objects
-            Configuration::SharedObjects    sharedObjects;
+			// shared objects
+			Configuration::SharedObjects sharedObjects;
 
-            // network
-            Configuration::NetworkSettings   networkSettings;
-                // interface
-                // http port
-                // access control
+			// network
+			Configuration::NetworkSettings networkSettings;
 
-            // database
-            Configuration::DatabaseSettings databaseSettings;
+			// database
+			Configuration::DatabaseSettings databaseSettings;
 
-            // global settings
-            Configuration::GlobalSettings   globalSettings;
+			// global settings
+			Configuration::GlobalSettings globalSettings;
 
-            // virtual containers
-            Configuration::VirtualContainerSettings    virtualContainerSettings;
+			// transcoding
+			Configuration::TranscodingSettings transcodingSettings;
 
-            // device identification
-            Configuration::DeviceIdentificationSettings deviceIdentificationSettings;
+			// virtual containers
+			Configuration::VirtualContainerSettings virtualContainerSettings;
 
-            // content database
-            Configuration::ContentDatabase contentDatabaseSettings;
+			// device identification
+			Configuration::DeviceIdentificationSettings deviceIdentificationSettings;
 
+			// content database
+			Configuration::ContentDatabase contentDatabaseSettings;
 
-            PathFinder                  pathFinder;
-            Configuration::ConfigFile   configFile;
+			PathFinder pathFinder;
+			Configuration::ConfigFile configFile;
 
-    };
+	};
 
 }
 

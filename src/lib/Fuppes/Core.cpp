@@ -49,7 +49,7 @@ Core::Core(fuppes_status_callback_t callback, Fuppes::FuppesConfig& fuppesConfig
         m_connectionManager(),
         m_xmsMediaReceiverRegistrar(),
 
-        m_transcoder(m_pluginManager, fuppesConfig.globalSettings.tempDir),
+        m_transcoder(m_pluginManager, fuppesConfig.transcodingSettings),
         m_presentationHandler(fuppesConfig),
         m_controlInterface(this, fuppesConfig, m_contentDatabase)
 {
