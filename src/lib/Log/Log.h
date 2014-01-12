@@ -22,6 +22,7 @@
 #include <string>
 #include <string.h>
 #include <stdio.h>
+#include <stdarg.h>
 
 #define LOGNULL if (Logger::Null == Log::m_loggerType) return *this;
 #define LOGACTIVE if (0 == (Log::m_loggerLevel & m_currentLevel)) return *this;
