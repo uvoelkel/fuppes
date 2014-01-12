@@ -39,11 +39,29 @@ class LogTest: public Test::BaseTest
         }
 };
 
+
+class LogPrintfTest: public Test::BaseTest
+{
+    public:
+		LogPrintfTest() :
+                BaseTest("printf log test")
+        {
+        }
+
+        void run() throw (Test::Exception)
+        {
+            Log::Log::setType(Log::Logger::Stdout);
+
+            log("logtest") << Log::Log::normal << "printf" << Log::Log::printf("test %s %d", "string", 123);
+        }
+};
+
 int main(int argc, char* argv[])
 {
     Test::App app(argc, argv);
 
     app.m_tests.push_back(new LogTest());
+    app.m_tests.push_back(new LogPrintfTest());
 
     return app.run();
 }

@@ -20,9 +20,11 @@
 
 #include "Logger.h"
 #include <string>
+#include <string.h>
+#include <stdio.h>
 
 #define LOGNULL if (Logger::Null == Log::m_loggerType) return *this;
-#define LOGACTIVE if (0 != (Log::m_loggerLevel & m_currentLevel)) return *this;
+#define LOGACTIVE if (0 == (Log::m_loggerLevel & m_currentLevel)) return *this;
 
 namespace Log
 {
@@ -110,6 +112,17 @@ namespace Log
                 m_logger->log(s);
                 return *this;
             }
+
+            static inline const std::string printf(const std::string format, ...)
+			{
+				va_list args;
+				va_start(args, format);
+				char buffer[8192];
+				memset(buffer, 0, sizeof(buffer));
+				vsnprintf(buffer, sizeof(buffer) - 1, format.c_str(), args);
+				va_end(args);
+				return buffer;
+			}
 
         private:
             static Logger::Type m_loggerType;
