@@ -34,101 +34,77 @@
 using namespace std;
 using namespace fuppes;
 
-//PathFinder* PathFinder::m_instance = NULL;
-
-/*
- void PathFinder::init(std::string applicationDir) // static
- {
- assert(m_instance == NULL);
- m_instance = new PathFinder(applicationDir);
- }
-
-
- void PathFinder::uninit() // static
- {
- assert(m_instance != NULL);
- delete m_instance;
- m_instance = NULL;
- }
-
- PathFinder* PathFinder::instance() // static
- {
- assert(m_instance != NULL);
- return m_instance;
- }
- */
-
 void PathFinder::init(std::string applicationDir)
 {
 
-    m_applicationDir = applicationDir;
+	m_applicationDir = applicationDir;
 
-    /*
-     * http://standards.freedesktop.org/basedir-spec/latest/ar01s03.html
-     *
-     * $XDG_DATA_HOME defines the base directory relative to which user specific data files should be stored. If $XDG_DATA_HOME is either not set or empty, a default equal to $HOME/.local/share should be used.
-     * $XDG_CONFIG_HOME defines the base directory relative to which user specific configuration files should be stored. If $XDG_CONFIG_HOME is either not set or empty, a default equal to $HOME/.config should be used.
-     *
-     */
+	/*
+	 * http://standards.freedesktop.org/basedir-spec/latest/ar01s03.html
+	 *
+	 * $XDG_DATA_HOME defines the base directory relative to which user specific data files should be stored. If $XDG_DATA_HOME is either not set or empty, a default equal to $HOME/.local/share should be used.
+	 * $XDG_CONFIG_HOME defines the base directory relative to which user specific configuration files should be stored. If $XDG_CONFIG_HOME is either not set or empty, a default equal to $HOME/.config should be used.
+	 *
+	 */
 
 #ifdef WIN32
-    string data = StringReplace(string(getenv("APPDATA")), "\\", "/") + "/fuppes/";
-    m_dataPaths.push_back(data);
+	string data = StringReplace(string(getenv("APPDATA")), "\\", "/") + "/fuppes/";
+	m_dataPaths.push_back(data);
 
-    string config = StringReplace(string(getenv("APPDATA")), "\\", "/") + "/fuppes/";
-    m_configPaths.push_back(config);
+	string config = StringReplace(string(getenv("APPDATA")), "\\", "/") + "/fuppes/";
+	m_configPaths.push_back(config);
 #else
 
-    string xdgData = PathFinder::getXdgDataHome();
-    string xdgConfig = PathFinder::getXdgConfigHome();
+	string xdgData = PathFinder::getXdgDataHome();
+	string xdgConfig = PathFinder::getXdgConfigHome();
 
-    // old .fuppes dir
-    string oldData = string(getenv("HOME")) + "/.fuppes/";
-    string oldConfig = string(getenv("HOME")) + "/.fuppes/";
+	// old .fuppes dir
+	string oldData = string(getenv("HOME")) + "/.fuppes/";
+	string oldConfig = string(getenv("HOME")) + "/.fuppes/";
 
-    // $(localstatedir)/lib/fuppes  (this directory is created by make install but it may not be writable)
-    string lsData = Directory::appendTrailingSlash(FUPPES_LOCALSTATEDIR);
-    string lsConfig = Directory::appendTrailingSlash(FUPPES_LOCALSTATEDIR);
+	// $(localstatedir)/lib/fuppes  (this directory is created by make install but it may not be writable)
+	string lsData = Directory::appendTrailingSlash(FUPPES_LOCALSTATEDIR);
+	string lsConfig = Directory::appendTrailingSlash(FUPPES_LOCALSTATEDIR);
 
-    // check if $(localstatedir)/lib/fuppes is writable and create
-    // xdg paths if it is not
-    if (!Directory::writable(lsData)) {
+	// check if $(localstatedir)/lib/fuppes is writable and create
+	// xdg paths if it is not
+	if (!Directory::writable(lsData)) {
 
-        //log(Log::config, Log::normal | Log::warning)<< lsData << "not writable using" << xdgData << "instead";
-        //log(Log::config, Log::normal | Log::warning) << lsConfig << "not writable using" << xdgConfig << "instead";
+		//log(Log::config, Log::normal | Log::warning)<< lsData << "not writable using" << xdgData << "instead";
+		//log(Log::config, Log::normal | Log::warning) << lsConfig << "not writable using" << xdgConfig << "instead";
 
-        if(!Directory::exists(xdgData)) {
-            Directory::create(xdgData);
-        }
+		if (!Directory::exists(xdgData)) {
+			Directory::create(xdgData);
+		}
 
-        if(!Directory::exists(xdgConfig)) {
-            Directory::create(xdgConfig);
-        }
-    }
+		if (!Directory::exists(xdgConfig)) {
+			Directory::create(xdgConfig);
+		}
+	}
 
-    // if the xdg paths exist they have the highest priority
-    if (Directory::exists(xdgData) && Directory::exists(xdgConfig)) {
-        m_dataPaths.push_back(xdgData);
-        m_configPaths.push_back(xdgConfig);
-    }
+	// if the xdg paths exist they have the highest priority
+	if (Directory::exists(xdgData) && Directory::exists(xdgConfig)) {
+		m_dataPaths.push_back(xdgData);
+		m_configPaths.push_back(xdgConfig);
+	}
 
-    // check if the old .fuppes directory still exists, throw a warning
-    // and add it to the config and data search paths
-    if (Directory::exists(oldData)) {
-        m_dataPaths.push_back(oldData);
-        m_configPaths.push_back(oldConfig);
+	// check if the old .fuppes directory still exists, throw a warning
+	// and add it to the config and data search paths
+	if (Directory::exists(oldData)) {
+		m_dataPaths.push_back(oldData);
+		m_configPaths.push_back(oldConfig);
 
-        //log(Log::config, Log::normal | Log::warning)<< "old ~/.fuppes config directory found.";
-    }
+		//log(Log::config, Log::normal | Log::warning)<< "old ~/.fuppes config directory found.";
+	}
 
-    // finally add the $(localstatedir)/lib/fuppes paths
-    m_dataPaths.push_back(lsData);
-    m_configPaths.push_back(lsConfig);
+	// finally add the $(localstatedir)/lib/fuppes paths
+	m_dataPaths.push_back(lsData);
+	m_configPaths.push_back(lsConfig);
 
 #endif
 
-    devicesPath = DEVICE_DIRECTORY;
-    vfolderPath = VFOLDER_DIRECTORY;
+	devicesPath = DEVICE_DIRECTORY;
+	vfolderPath = VFOLDER_DIRECTORY;
 }
 
 /*
@@ -141,257 +117,252 @@ void PathFinder::init(std::string applicationDir)
 
 void PathFinder::addConfigPath(std::string path) // static
 {
-    if (!path.empty()) {
-        m_configPaths.insert(m_configPaths.begin(), path);
-    }
+	if (!path.empty()) {
+		m_configPaths.insert(m_configPaths.begin(), path);
+	}
 }
 
 string PathFinder::findInDataPath(std::string fileName, int flags /*= File::Readable*/, std::string extra /*= ""*/)
 {
-    bool found = false;
-    string tempName = "";
-    vector<string>::const_iterator it;
-    for (it = m_dataPaths.begin(); it != m_dataPaths.end(); ++it) {
-        tempName = *it;
-        tempName += extra;
-        tempName += fileName;
-        if (File::exists(tempName)) {
+	bool found = false;
+	string tempName = "";
+	vector<string>::const_iterator it;
+	for (it = m_dataPaths.begin(); it != m_dataPaths.end(); ++it) {
+		tempName = *it;
+		tempName += extra;
+		tempName += fileName;
+		if (File::exists(tempName)) {
 
-            found = true;
+			found = true;
 
-            if ((flags & File::Readable) && !File::readable(tempName))
-                found = false;
-            if ((flags & File::Writable) && !File::writable(tempName))
-                found = false;
-            if ((flags & File::Executable) && !File::executable(tempName))
-                found = false;
+			if ((flags & File::Readable) && !File::readable(tempName))
+				found = false;
+			if ((flags & File::Writable) && !File::writable(tempName))
+				found = false;
+			if ((flags & File::Executable) && !File::executable(tempName))
+				found = false;
 
-            if (found)
-                break;
-        }
-    }
+			if (found)
+				break;
+		}
+	}
 
-    return (found ? tempName : "");
+	return (found ? tempName : "");
 }
 
 string PathFinder::findInConfigPath(std::string fileName, int flags /*= File::Readable*/, std::string extra /*= ""*/)
 {
-    bool found = false;
-    string tempName = "";
-    vector<string>::const_iterator it;
-    for (it = m_configPaths.begin(); it != m_configPaths.end(); ++it) {
-        tempName = *it;
-        tempName += extra;
-        tempName += fileName;
-        if (File::exists(tempName)) {
+	bool found = false;
+	string tempName = "";
+	vector<string>::const_iterator it;
+	for (it = m_configPaths.begin(); it != m_configPaths.end(); ++it) {
+		tempName = *it;
+		tempName += extra;
+		tempName += fileName;
+		if (File::exists(tempName)) {
 
-            found = true;
+			found = true;
 
-            if ((flags & File::Readable) && !File::readable(tempName))
-                found = false;
-            if ((flags & File::Writable) && !File::writable(tempName))
-                found = false;
-            if ((flags & File::Executable) && !File::executable(tempName))
-                found = false;
+			if ((flags & File::Readable) && !File::readable(tempName))
+				found = false;
+			if ((flags & File::Writable) && !File::writable(tempName))
+				found = false;
+			if ((flags & File::Executable) && !File::executable(tempName))
+				found = false;
 
-            if (found)
-                break;
-        }
-    }
+			if (found)
+				break;
+		}
+	}
 
-    return (found ? tempName : "");
+	return (found ? tempName : "");
 }
 
 std::string PathFinder::findDataPath(int flags)
 {
-    bool found = false;
-    string tempName = "";
-    vector<string>::const_iterator it;
-    for (it = m_dataPaths.begin(); it != m_dataPaths.end(); ++it) {
-        tempName = *it;
+	bool found = false;
+	string tempName = "";
+	vector<string>::const_iterator it;
+	for (it = m_dataPaths.begin(); it != m_dataPaths.end(); ++it) {
+		tempName = *it;
 
-        if (Directory::exists(tempName)) {
+		if (Directory::exists(tempName)) {
 
-            found = true;
+			found = true;
 
-            if ((flags & Directory::Readable) && !Directory::readable(tempName))
-                found = false;
-            if ((flags & Directory::Writable) && !Directory::writable(tempName))
-                found = false;
+			if ((flags & Directory::Readable) && !Directory::readable(tempName))
+				found = false;
+			if ((flags & Directory::Writable) && !Directory::writable(tempName))
+				found = false;
 
-            if (found)
-                break;
-        }
-    }
+			if (found)
+				break;
+		}
+	}
 
-    return (found ? tempName : "");
+	return (found ? tempName : "");
 }
 
 string PathFinder::findDeviceInPath(string device)
 {
-    return findInConfigPath(device + DEVICE_EXT, File::Readable, Directory::appendTrailingSlash(devicesPath));
+	return findInConfigPath(device + DEVICE_EXT, File::Readable, Directory::appendTrailingSlash(devicesPath));
 }
 
 string PathFinder::findVFolderInPath(string device)
 {
-    return findInConfigPath(device + VFOLDER_EXT, File::Readable, Directory::appendTrailingSlash(vfolderPath));
+	return findInConfigPath(device + VFOLDER_EXT, File::Readable, Directory::appendTrailingSlash(vfolderPath));
 }
 
-std::string PathFinder::findDataDir() // static
+std::string PathFinder::findDataDir()
 {
-    if (!m_dataDir.empty())
-        return m_dataDir;
+	if (!m_dataDir.empty())
+		return m_dataDir;
 
-    string tempName = "";
-    vector<string>::const_iterator it;
-    for (it = m_dataPaths.begin(); it != m_dataPaths.end(); ++it) {
-        tempName = *it;
+	string tempName = "";
+	vector<string>::const_iterator it;
+	for (it = m_dataPaths.begin(); it != m_dataPaths.end(); ++it) {
+		tempName = *it;
 
-        if (!Directory::exists(tempName) && Directory::writable(*it) && Directory::create(tempName)) {
-            m_dataDir = tempName;
-            break;
-        }
+		if (!Directory::exists(tempName) && Directory::writable(*it) && Directory::create(tempName)) {
+			m_dataDir = tempName;
+			break;
+		}
 
-        if (Directory::exists(tempName) && Directory::writable(tempName)) {
-            m_dataDir = tempName;
-            break;
-        }
-    }
+		if (Directory::exists(tempName) && Directory::writable(tempName)) {
+			m_dataDir = tempName;
+			break;
+		}
+	}
 
-    return m_dataDir;
+	return m_dataDir;
 }
 
-std::string PathFinder::findThumbnailsDir() // static
+std::string PathFinder::findThumbnailsDir()
 {
-    if (!m_thumbnailsDir.empty())
-        return m_thumbnailsDir;
+	if (!m_thumbnailsDir.empty())
+		return m_thumbnailsDir;
 
-    string tempName = "";
-    vector<string>::const_iterator it;
-    for (it = m_dataPaths.begin(); it != m_dataPaths.end(); ++it) {
-        tempName = *it;
-        tempName += "thumbnails/";
+	string tempName = "";
+	vector<string>::const_iterator it;
+	for (it = m_dataPaths.begin(); it != m_dataPaths.end(); ++it) {
+		tempName = *it;
+		tempName += "thumbnails/";
 
-        if (!Directory::exists(tempName) && Directory::writable(*it) && Directory::create(tempName)) {
-            m_thumbnailsDir = tempName;
-            break;
-        }
+		if (!Directory::exists(tempName) && Directory::writable(*it) && Directory::create(tempName)) {
+			m_thumbnailsDir = tempName;
+			break;
+		}
 
-        if (Directory::exists(tempName) && Directory::writable(tempName)) {
-            m_thumbnailsDir = tempName;
-            break;
-        }
-    }
+		if (Directory::exists(tempName) && Directory::writable(tempName)) {
+			m_thumbnailsDir = tempName;
+			break;
+		}
+	}
 
-    return m_thumbnailsDir;
+	return m_thumbnailsDir;
 }
 
-StringList PathFinder::GetDevicesList() // static
+StringList PathFinder::GetDevicesList()
 {
-    StringList result;
+	StringList result;
 
-    Directory dir;
-    DirEntryList entries;
-    DirEntryListIterator entriesIter;
+	Directory dir;
+	DirEntryList entries;
+	DirEntryListIterator entriesIter;
 
-    string tmp;
-    string ext;
+	string tmp;
+	string ext;
 
-    vector<string>::const_iterator it;
-    for (it = m_configPaths.begin(); it != m_configPaths.end(); ++it) {
+	vector<string>::const_iterator it;
+	for (it = m_configPaths.begin(); it != m_configPaths.end(); ++it) {
 
-        if (!dir.open(*it + DEVICE_DIRECTORY))
-            continue;
-        entries = dir.dirEntryList(DirEntry::File);
-        dir.close();
+		if (!dir.open(*it + DEVICE_DIRECTORY))
+			continue;
+		entries = dir.dirEntryList(DirEntry::File);
+		dir.close();
 
-        for (entriesIter = entries.begin(); entriesIter != entries.end(); entriesIter++) {
+		for (entriesIter = entries.begin(); entriesIter != entries.end(); entriesIter++) {
 
-            tmp = entriesIter->name();
-            if (tmp.length() < 5)
-                continue;
+			tmp = entriesIter->name();
+			if (tmp.length() < 5)
+				continue;
 
-            ext = tmp.substr(tmp.length() - 4, 4);
-            tmp = tmp.substr(0, tmp.length() - 4);
+			ext = tmp.substr(tmp.length() - 4, 4);
+			tmp = tmp.substr(0, tmp.length() - 4);
 
-            if (result.indexOf(tmp) >= 0)
-                continue;
-            result.push_back(tmp);
-        }
-    }
+			if (result.indexOf(tmp) >= 0)
+				continue;
+			result.push_back(tmp);
+		}
+	}
 
-    return result;
+	return result;
 }
 
-StringList PathFinder::GetVfoldersList() // static
+StringList PathFinder::GetVfoldersList()
 {
-    StringList result;
+	StringList result;
 
-    result.push_back("none");
+	result.push_back("none");
 
-    Directory dir;
-    DirEntryList entries;
-    DirEntryListIterator entriesIter;
+	Directory dir;
+	DirEntryList entries;
+	DirEntryListIterator entriesIter;
 
-    string tmp;
-    string ext;
+	string tmp;
+	string ext;
 
-    vector<string>::const_iterator it;
-    for (it = m_configPaths.begin(); it != m_configPaths.end(); ++it) {
+	vector<string>::const_iterator it;
+	for (it = m_configPaths.begin(); it != m_configPaths.end(); ++it) {
 
-        if (!dir.open(*it + VFOLDER_DIRECTORY))
-            continue;
-        entries = dir.dirEntryList(DirEntry::File);
-        dir.close();
+		if (!dir.open(*it + VFOLDER_DIRECTORY))
+			continue;
+		entries = dir.dirEntryList(DirEntry::File);
+		dir.close();
 
-        for (entriesIter = entries.begin(); entriesIter != entries.end(); entriesIter++) {
+		for (entriesIter = entries.begin(); entriesIter != entries.end(); entriesIter++) {
 
-            tmp = entriesIter->name();
-            if (tmp.length() < 5)
-                continue;
+			tmp = entriesIter->name();
+			if (tmp.length() < 5)
+				continue;
 
-            ext = tmp.substr(tmp.length() - 4, 4);
-            tmp = tmp.substr(0, tmp.length() - 4);
+			ext = tmp.substr(tmp.length() - 4, 4);
+			tmp = tmp.substr(0, tmp.length() - 4);
 
-            if (result.indexOf(tmp) >= 0)
-                continue;
-            result.push_back(tmp);
-        }
-    }
+			if (result.indexOf(tmp) >= 0)
+				continue;
+			result.push_back(tmp);
+		}
+	}
 
-    return result;
+	return result;
 }
 
 #ifndef WIN32
 std::string PathFinder::getXdgConfigHome() // static
 {
-    char* env = getenv("XDG_CONFIG_HOME");
+	char* env = getenv("XDG_CONFIG_HOME");
 
-    // XDG_CONFIG_HOME :: if $XDG_CONFIG_HOME is either not set or empty, a default equal to $HOME/.config should be used.
-    if (NULL == env || 0 == strlen(env)) {
-        return string(getenv("HOME")) + "/.config/fuppes/";
-    }
-    else {
-        return string(env) + "/fuppes/";
-    }
+	// XDG_CONFIG_HOME :: if $XDG_CONFIG_HOME is either not set or empty, a default equal to $HOME/.config should be used.
+	if (NULL == env || 0 == strlen(env)) {
+		return string(getenv("HOME")) + "/.config/fuppes/";
+	}
+	else {
+		return string(env) + "/fuppes/";
+	}
 }
 
 std::string PathFinder::getXdgDataHome() // static
 {
-    char* env = getenv("XDG_DATA_HOME");
+	char* env = getenv("XDG_DATA_HOME");
 
-    // XDG_DATA_HOME :: if $XDG_DATA_HOME is either not set or empty, a default equal to $HOME/.local/share should be used.
-    if (NULL == env || 0 == strlen(env)) {
-        return string(getenv("HOME")) + "/.local/share/fuppes/";
-    }
-    else {
-        return string(env) + "/fuppes/";
-    }
+	// XDG_DATA_HOME :: if $XDG_DATA_HOME is either not set or empty, a default equal to $HOME/.local/share should be used.
+	if (NULL == env || 0 == strlen(env)) {
+		return string(getenv("HOME")) + "/.local/share/fuppes/";
+	}
+	else {
+		return string(env) + "/fuppes/";
+	}
 }
 #endif
 
-/*
- void PathFinder::walker(bool (*step)(string)) {
- Directory::walk(&m_paths, step);
- }
- */
