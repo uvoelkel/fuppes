@@ -485,7 +485,7 @@ ControlInterface::ErrorCode ControlInterface::execSetCharset(const ControlAction
 ControlInterface::ErrorCode ControlInterface::execGetTempDir(const ControlActionParams params, ControlActionParam &result)
 {
     result.name = "TempDir";
-    result.value = m_fuppesConfig.globalSettings.tempDir;
+    result.value = m_fuppesConfig.transcodingSettings.tempDir;
     return ControlInterface::Ok;
 }
 
