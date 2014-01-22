@@ -28,7 +28,8 @@ namespace Transcoding
 	{
 		public:
 
-			enum State {
+			enum State
+			{
 				Invalid,
 				Idle,
 				Running,
@@ -43,38 +44,38 @@ namespace Transcoding
 			bool init(Transcoding::Item& item);
 			bool transcode();
 
-			bool canPause();
-			bool isPaused();
+			bool canPause() const;
+			bool isPaused() const;
 			void pause();
 			void resume();
 
-			std::string					m_identifier;
-			bool						m_initialized;
+			std::string m_identifier;
+			bool m_initialized;
 
-			bool						m_threaded;
-			bool						m_completed;
-			bool						m_error;
-			State						m_state;
+			bool m_threaded;
+			bool m_completed;
+			bool m_error;
+			State m_state;
 
-			bool						m_transcodeToFile;
-			Plugin::AbstractDecoder*	m_decoder;
-			Plugin::AbstractEncoder*	m_encoder;
-			Plugin::AbstractTranscoder*	m_transcoder;
+			bool m_transcodeToFile;
+			Plugin::AbstractDecoder* m_decoder;
+			Plugin::AbstractEncoder* m_encoder;
+			Plugin::AbstractTranscoder* m_transcoder;
 
-			unsigned int	m_referenceCount;
-			unsigned int 	m_releaseCount;
-			unsigned int 	m_releaseDelay;
+			unsigned int m_referenceCount;
+			unsigned int m_releaseCount;
+			unsigned int m_releaseDelay;
 
 			// the buffer holding the decoder result
-			unsigned char*				m_buffer;
-			size_t						m_bufferSize;
+			unsigned char* m_buffer;
+			size_t m_bufferSize;
 
 			// the buffer holding the final encoded/transcoded result
-			unsigned char*				m_data;
-			fuppes_off_t				m_dataSize;
+			unsigned char* m_data;
+			fuppes_off_t m_dataSize;
 
-			fuppes::File				m_file;
-			std::string					m_targetPath;
+			fuppes::File m_file;
+			std::string m_targetPath;
 
 		private:
 			void run();

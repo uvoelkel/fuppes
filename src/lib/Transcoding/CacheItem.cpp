@@ -16,7 +16,7 @@
 using namespace Transcoding;
 
 CacheItem::CacheItem(const std::string identifier) :
-	Threading::Thread("transcoding cache item")
+		Threading::Thread("transcoding cache item")
 {
 	m_identifier = identifier;
 	m_initialized = false;
@@ -92,7 +92,6 @@ bool CacheItem::init(Transcoding::Item& item)
 		}
 	}
 
-
 	if (NULL != m_transcoder) {
 
 		if (Transcoding::Item::File == item.transcodeTarget) {
@@ -149,8 +148,7 @@ bool CacheItem::transcode()
 	return true;
 }
 
-
-bool CacheItem::canPause()
+bool CacheItem::canPause() const
 {
 	if (!m_threaded) {
 		return false;
@@ -172,7 +170,7 @@ bool CacheItem::canPause()
 	return false;
 }
 
-bool CacheItem::isPaused()
+bool CacheItem::isPaused() const
 {
 	return (CacheItem::Paused == m_state);
 }
@@ -194,8 +192,6 @@ void CacheItem::resume()
 
 	m_state = CacheItem::Running;
 }
-
-
 
 void CacheItem::run()
 {
@@ -260,7 +256,6 @@ void CacheItem::doTranscode()
 				break;
 			}
 
-
 			encRet = m_encoder->encode(m_buffer, bytes, samples);
 
 			// may return 0. this is not an error
@@ -272,7 +267,6 @@ void CacheItem::doTranscode()
 				m_error = true;
 				break;
 			}
-
 
 			if (m_file.isOpen()) {
 				m_dataSize += m_file.write((const char*)m_encoder->getBuffer(), encRet);
@@ -307,7 +301,7 @@ void CacheItem::doTranscode()
 		}
 	}
 
-	std::cout << "CacheItem :: exit transcoding loop: " << (m_completed ? "completed" : "not completed") << " " << (m_error  ? "error" : "ok") << std::endl;
+	std::cout << "CacheItem :: exit transcoding loop: " << (m_completed ? "completed" : "not completed") << " " << (m_error ? "error" : "ok") << std::endl;
 
 	if (NULL != m_decoder) {
 		m_decoder->closeFile();
